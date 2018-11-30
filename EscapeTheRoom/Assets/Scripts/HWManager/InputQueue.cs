@@ -30,7 +30,8 @@ namespace SerialTest
             for (string input = _serialPort.ReadLine(); input != ""; input = _serialPort.ReadLine())
             {
                 input = input.Trim();
-                if (Int16.TryParse(input, out var number))
+                Int16 number;
+                if (Int16.TryParse(input, out number))
                 {
                     _inputs.Enqueue(number);
                     lock (_mutex)
@@ -62,7 +63,8 @@ namespace SerialTest
             if (currentMessageCount <= 0) return;
             for (int i = 0; i < currentMessageCount; i++)
             {
-                _inputs.TryDequeue(out var data);
+                int data;
+                _inputs.TryDequeue(out data);
                 ProcessValue(data, buttons, rotary);
             }
 

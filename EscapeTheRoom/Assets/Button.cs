@@ -46,6 +46,7 @@ public class Button : MonoBehaviour
 
 	protected virtual void ButtonDown()
 	{
+		_renderer.material.color = Color.red;
 		if (_audioSource != null)
 		{
 			_audioSource.PlayOneShot(ButtonClickSound);
@@ -54,6 +55,7 @@ public class Button : MonoBehaviour
 
 	protected virtual void ButtonUp()
 	{
+		_renderer.material.color = Color.blue;
 		if (_audioSource != null)
 		{
 			_audioSource.PlayOneShot(ButtonReleaseSound);

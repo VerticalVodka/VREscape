@@ -1,4 +1,5 @@
 ﻿using System;
+using System.CodeDom;
 using System.Collections;
 using System.Collections.Generic;
 using System.Runtime.InteropServices;
@@ -11,6 +12,7 @@ namespace VREscape
     {
         private Dictionary<Enums.ButtonEnum, bool> _buttons;
         private Dictionary<Enums.RotaryEnum, int> _rotaries;
+        private const bool TestMode = true;
         private readonly InputQueue _inputQueue = new InputQueue("COM5");
 
 
@@ -45,6 +47,17 @@ namespace VREscape
         public void Update()
         {
             _inputQueue.ProcessData(out _buttons, out _rotaries);
+            if (!TestMode) return;
+            _buttons[Enums.ButtonEnum.Button1] = Input.GetKey(KeyCode.Alpha1);
+            _buttons[Enums.ButtonEnum.Button2] = Input.GetKey(KeyCode.Alpha2);
+            _buttons[Enums.ButtonEnum.Button3] = Input.GetKey(KeyCode.Alpha3);
+            _buttons[Enums.ButtonEnum.Button4] = Input.GetKey(KeyCode.Alpha4);
+            _rotaries[Enums.RotaryEnum.Rotary1] += Input.GetKey(KeyCode.LeftArrow) ? 1 : 0;
+            _rotaries[Enums.RotaryEnum.Rotary1] += Input.GetKey(KeyCode.RightArrow) ? -1 : 0;
+            _buttons[Enums.ButtonEnum.Rotary1] = Input.GetKey(KeyCode.DownArrow);
+            _rotaries[Enums.RotaryEnum.Rotary1] += Input.GetKey(KeyCode.A) ? 1 : 0;
+            _rotaries[Enums.RotaryEnum.Rotary1] += Input.GetKey(KeyCode.D) ? -1 : 0;
+            _buttons[Enums.ButtonEnum.Rotary1] = Input.GetKey(KeyCode.S);
         }
     }
 }

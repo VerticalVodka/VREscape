@@ -16,7 +16,7 @@ namespace VREscape
         private readonly InputQueue _inputQueue = new InputQueue("COM5");
 
 
-        public void Start()
+        public void Awake()
         {
             _buttons = new Dictionary<Enums.ButtonEnum, bool>
             {

@@ -5,6 +5,7 @@ using System.Collections.Generic;
 using System.Runtime.InteropServices;
 using SerialTest;
 using UnityEngine;
+using Extensions;
 
 namespace VREscape
 {
@@ -42,6 +43,11 @@ namespace VREscape
         public int GetRotaryState(Enums.RotaryEnum rotary)
         {
             return _rotaries[rotary];
+        }
+
+        public void SendValue(Enums.UnlockEnum unlockEnum)
+        {
+            _inputQueue.SendData(unlockEnum.GetEnumDescription());
         }
 
         public void Update()

@@ -13,6 +13,9 @@
             <e p="Button.cs" t="Include" />
             <e p="PushButton.cs" t="Include" />
           </e>
+          <e p="extensions" t="Include">
+            <e p="EnumExtensions.cs" t="Include" />
+          </e>
           <e p="GameLogic" t="Include">
             <e p="GameManager.cs" t="Include" />
           </e>

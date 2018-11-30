@@ -90,9 +90,9 @@ namespace SerialTest
             buttons.Add(Enums.ButtonEnum.Rotary2, false);
         }
 
-        public void SendData(int data)
+        public void SendData(string data)
         {
-            _serialPort.WriteLine(data.ToString());
+            _serialPort.WriteLine(data);
         }
 
         private void ProcessValue(int data, Dictionary<Enums.ButtonEnum, bool> buttons,

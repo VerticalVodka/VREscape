@@ -7,12 +7,25 @@
     <e p="C:\Users\peter\Documents\VREscape\VREscape\EscapeTheRoom" t="IncludeRecursive">
       <e p="Assembly-CSharp.csproj" t="IncludeRecursive" />
       <e p="Assets" t="Include">
-        <e p="Button.cs" t="Include" />
         <e p="Scripts" t="Include">
+          <e p="Button" t="Include">
+            <e p="Button.cs" t="Include" />
+            <e p="PushButton.cs" t="Include" />
+          </e>
+          <e p="GameLogic" t="Include">
+            <e p="GameManager.cs" t="Include" />
+          </e>
           <e p="HWManager" t="Include">
             <e p="Enums.cs" t="Include" />
             <e p="HWManager.cs" t="Include" />
             <e p="InputQueue.cs" t="Include" />
+          </e>
+          <e p="ObjectScripts" t="Include">
+            <e p="ButtonScript.cs" t="Include" />
+          </e>
+          <e p="Riddles" t="Include">
+            <e p="IRiddle.cs" t="Include" />
+            <e p="RiddleRadio.cs" t="Include" />
           </e>
         </e>
       </e>

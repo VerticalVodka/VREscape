@@ -1,5 +1,6 @@
 ﻿using System.Collections;
 using System.Collections.Generic;
+using System.ComponentModel;
 using UnityEngine;
 
 public static class Enums
@@ -18,5 +19,13 @@ public static class Enums
     {
         Rotary1,
         Rotary2
+    }
+    
+    public enum UnlockEnum
+    {
+        [Description("s")]
+        Safe,
+        [Description("d")]
+        Drawer
     }
 }

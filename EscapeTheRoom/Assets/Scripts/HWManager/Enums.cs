@@ -19,7 +19,4 @@ public static class Enums
         Rotary1,
         Rotary2
     }
-
-    {
-    }
 }

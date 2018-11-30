@@ -2,22 +2,30 @@
 using System.Collections.Generic;
 using UnityEngine;
 
-public class ButtonScript : MonoBehaviour {
+namespace VREscape
+{
+    public class ButtonScript : MonoBehaviour
+    {
 
-    public HWManager.Button button;
-    private bool oldButtonState;
+        public Enums.ButtonEnum button;
+        private bool oldButtonState;
+        private HWManager hWManager;
 
-	// Use this for initialization
-	void Start () {
-        oldButtonState = HWManager.IsButtonPressed(button);
-	}
-	
-	// Update is called once per frame
-	void Update () {
-        if (HWManager.IsButtonPressed(button) != oldButtonState)
+        // Use this for initialization
+        void Start()
         {
-            oldButtonState = !oldButtonState;
-            //TODO animation + sound
+            hWManager = FindObjectOfType<HWManager>();
+            oldButtonState = hWManager.GetButtonState(button);
         }
-	}
+
+        // Update is called once per frame
+        void Update()
+        {
+            if (hWManager.GetButtonState(button) != oldButtonState)
+            {
+                oldButtonState = !oldButtonState;
+                //TODO animation + sound
+            }
+        }
+    }
 }

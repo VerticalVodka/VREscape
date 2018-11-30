@@ -3,24 +3,32 @@ using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
 
-public class RiddleRadio : MonoBehaviour, IRiddle {
-    public event Action<bool> OnRiddleDone;
 
-    public void StartRiddle()
+namespace VREscape
+{
+    public class RiddleRadio : MonoBehaviour, IRiddle
     {
-        Debug.Log("RiddleRadio started");
-        StartCoroutine(Do());
-        if(OnRiddleDone != null)
+        private HWManager hWManager;
+
+        public event Action<bool> OnRiddleDone;
+
+        public void StartRiddle()
         {
-            OnRiddleDone.Invoke(true);
+            Debug.Log("RiddleRadio started");
+            hWManager = FindObjectOfType<HWManager>();
+            StartCoroutine(Do());
+            if (OnRiddleDone != null)
+            {
+                OnRiddleDone.Invoke(true);
+            }
         }
-    }
 
-    IEnumerator Do()
-    {
-        while (HWManager.IsButtonPressed(HWManager.Button.button1))
-            yield return new WaitForSecondsRealtime(0);
-        while (HWManager.IsButtonPressed(HWManager.Button.button2))
-            yield return new WaitForSecondsRealtime(0);
+        IEnumerator Do()
+        {
+            while (hWManager.GetButtonState(Enums.ButtonEnum.Button1))
+                yield return new WaitForSecondsRealtime(0);
+            while (hWManager.GetRotaryState(Enums.RotaryEnum.Rotary2) != 10)
+                yield return new WaitForSecondsRealtime(0);
+        }
     }
 }

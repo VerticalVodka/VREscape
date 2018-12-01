@@ -6,7 +6,7 @@ namespace Extensions
 {
     public static class EnumExtensions
     {
-        public static string GetEnumDescription(this Enum value)
+        public static string GetDescription(this Enum value)
         {
             var fi = value.GetType().GetField(value.ToString());
 

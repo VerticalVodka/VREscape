@@ -1,6 +1,9 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.Linq;
+using System.Text;
+using System.Threading;
+using System.Threading.Tasks;
 using UnityEngine;
 
 namespace VREscape
@@ -22,10 +25,18 @@ namespace VREscape
     /// </summary>
     public int successesTotalForWin = 10;
 
+    [Serializable]
+    public struct ButtonAndGameObject
+    {
+      public Enums.ButtonEnum button;
+      public GameObject gameObject;
+    }
+
     /// <summary>
     /// Map of buttons -> GameObjects
     /// The Gameobjects have to have a MeshFilter, whose mesh will get replaced with the respective animal's mesh
     /// </summary>
+    public List<ButtonAndGameObject> buttonList;
     public Dictionary<Enums.ButtonEnum, GameObject> buttons;
     /// <summary>
     /// List of animals.
@@ -34,9 +45,10 @@ namespace VREscape
     /// </summary>
     public List<GameObject> animals = new List<GameObject>();
     /// <summary>
-    /// The amount of seconds to wait before playing all audio-clips again after finishing them
+    /// The amount of milliseconds to wait before playing all audio-clips again after finishing them
     /// </summary>
     public int audioWaitBetweenSequences;
+    public int audioWaitAfterClip;
 
     /// <summary>
     /// Audiosource which will be playing the sounds
@@ -77,7 +89,7 @@ namespace VREscape
         });
     }
 
-    void RandomizeSequence()
+    private void RandomizeSequence()
     {
       if (buttons.Count <= 0)
         throw new InvalidOperationException("You need at least one Button to play the SimonSays riddle. Add one to SimonSaysRiddle.buttons.");
@@ -88,46 +100,68 @@ namespace VREscape
       {
         currentSequence.Add(buttons.Keys.ElementAt(random.Next(0, buttons.Count - 1)));
       }
-    }
+      sequencePressedIndex = 0;
 
-    void ShowImagesAboveButtons()
-    {
-      foreach (var bamkvp in buttonAnimalMap)
+      if (Debug.isDebugBuild)
       {
-        buttons[bamkvp.Key].GetComponent<MeshFilter>().mesh = bamkvp.Value.GetComponent<Mesh>();
+        var sb = new StringBuilder();
+        foreach (var seq in currentSequence)
+        {
+          sb.Append(seq);
+          sb.Append(">");
+        }
+        Debug.Log("Current Sequence: " + sb.ToString());
       }
     }
 
-    void StartPlayingSequenceSound()
-    {
-      isPlayingSounds = true;
-      sequenceAudioIndex = -1;
-    }
-
-    void StopPlayingSequenceSound()
-    {
-      isPlayingSounds = false;
-    }
-
-    void StopShowingImagesAboveButtons()
+    private void ShowImagesAboveButtons()
     {
       foreach (var bamkvp in buttonAnimalMap)
       {
-        buttons[bamkvp.Key].GetComponent<MeshFilter>().mesh = null;
+        // TODO: Add Shader
+        Debug.Log("---");
+        Debug.Log(bamkvp.Value);
+        Debug.Log(bamkvp.Value.GetComponent<Material>());
+        var renderer = buttons[bamkvp.Key].GetComponent<MeshRenderer>();
+        renderer.enabled = true;
+        renderer.material.shader..CopyPropertiesFromMaterial(bamkvp.Value.GetComponent<Material>());
+      }
+    }
+
+    private void StartPlayingSequenceSound()
+    {
+      sequenceAudioIndex = -1;
+      shouldAudioPlay = true;
+    }
+
+    private void StopPlayingSequenceSound()
+    {
+      shouldAudioPlay = false;
+      audioSource.Stop();
+    }
+
+    private void StopShowingImagesAboveButtons()
+    {
+      foreach (var bamkvp in buttonAnimalMap)
+      {
+        // TODO: Remove Shader
+        buttons[bamkvp.Key].GetComponent<MeshRenderer>().enabled = false;
       }
     }
 
     public void StartRiddle()
     {
+      lastCorrectButton = null;
       LoadNewLevel();
     }
 
     private void LoadNewLevel()
     {
-        StartPlayingSequenceSound();
-        RandomizeButtons();
-        RandomizeSequence();
-        ShowImagesAboveButtons();
+      Debug.Log("Loading new Level");
+      StartPlayingSequenceSound();
+      RandomizeButtons();
+      RandomizeSequence();
+      ShowImagesAboveButtons();
     }
 
     private void EndLevel()
@@ -149,6 +183,7 @@ namespace VREscape
 
     private void WinLevel()
     {
+      Debug.Log("Won Level");
       EndLevel();
       ++successesInSequence;
       ++successesTotal;
@@ -164,6 +199,7 @@ namespace VREscape
 
     private void ResetLevel()
     {
+      Debug.Log("Reset Level");
       EndLevel();
       successesInSequence = 0;
       if (!IsEndOfGame())
@@ -176,49 +212,77 @@ namespace VREscape
       }
     }
 
-    private int sequencePressedIndex = 0;
+    private int sequencePressedIndex;
     public void Start()
     {
       hwManager = FindObjectOfType<HWManager>();
+      buttons = buttonList.ToDictionary(kvp => kvp.button, kvp => kvp.gameObject);
+      StartRiddle(); // TODO: Remove
     }
+
+    private Nullable<Enums.ButtonEnum> lastCorrectButton;
+    private bool isAudioReady = true;
+    private bool shouldAudioPlay = false;
+    private int sequenceAudioIndex;
 
     public void Update()
     {
-      foreach( var btnKvp in buttons)
-      {
-        if (btnKvp.Key != currentSequence[sequencePressedIndex])
-        {
-          ResetLevel();
-          return;
-        }
-      }
-      if(hwManager.GetButtonState(currentSequence[sequencePressedIndex]))
-        ++sequencePressedIndex;
-
-      if (sequencePressedIndex > currentSequence.Count)
-      {
-        WinLevel();
-      }
-
-      if (isPlayingSounds)
-        StartCoroutine(PlaySounds());
-    }
-
-    private int sequenceAudioIndex = -1;
-
-    private IEnumerator<WaitForSeconds> PlaySounds()
-    {
-      while (true)
+      if(shouldAudioPlay && isAudioReady)
       {
         ++sequenceAudioIndex;
-        if (sequenceAudioIndex > currentSequence.Count)
+        if (sequenceAudioIndex >= currentSequence.Count)
         {
-          sequenceAudioIndex = 0;
-          yield return new WaitForSeconds(audioWaitBetweenSequences);
+          sequenceAudioIndex = -1;
+          isAudioReady = false;
+          Task waitBeforeSequence = new Task(async () =>
+          {
+            if (audioWaitBetweenSequences - audioWaitAfterClip > 0)
+              await Task.Delay(audioWaitBetweenSequences - audioWaitAfterClip);
+            isAudioReady = true;
+          });
+          waitBeforeSequence.Start();
         }
-        AudioClip clip = buttonAnimalMap[currentSequence[sequenceAudioIndex]].GetComponent<AudioClip>();
-        audioSource.PlayOneShot(clip);
-        yield return new WaitForSeconds(clip.length);
+        else
+        {
+          AudioClip clip = buttonAnimalMap[currentSequence[sequenceAudioIndex]].GetComponent<AudioSource>().clip;
+          audioSource.PlayOneShot(clip);
+          isAudioReady = false;
+          int waitTime = audioWaitAfterClip + (int)(clip.length * 1000);
+          Task waitForClipFinished = new Task(async () =>
+          {
+            await Task.Delay(waitTime);
+            isAudioReady = true;
+          });
+          waitForClipFinished.Start();
+        }
+      }
+
+      if (lastCorrectButton.HasValue && !hwManager.GetButtonState(lastCorrectButton.Value))
+        lastCorrectButton = null;
+
+      if (!lastCorrectButton.HasValue)
+      {
+        if (hwManager.GetButtonState(currentSequence[sequencePressedIndex]))
+        {
+          lastCorrectButton = currentSequence[sequencePressedIndex];
+          ++sequencePressedIndex;
+        }
+
+        if (sequencePressedIndex >= currentSequence.Count)
+        {
+          WinLevel();
+          return;
+        }
+
+        foreach (var btnKvp in buttons)
+        {
+          if (btnKvp.Key != currentSequence[sequencePressedIndex]
+            && hwManager.GetButtonState(btnKvp.Key))
+          {
+            ResetLevel();
+            return;
+          }
+        }
       }
     }
   }

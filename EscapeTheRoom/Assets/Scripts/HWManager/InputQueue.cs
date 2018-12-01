@@ -32,24 +32,27 @@ namespace SerialTest
         //Called on Startup
         public void StartListening()
         {
-            //_serialPort.DataReceived += SerialDataReceived;
-            _serialPort.Open();
-            Thread t = new Thread(() =>
+            if (_serialPort != null)
             {
-                while (!_suspended)
+                //_serialPort.DataReceived += SerialDataReceived;
+                _serialPort.Open();
+                Thread t = new Thread(() =>
                 {
-                    for (string input = _serialPort.ReadLine(); input != ""; input = _serialPort.ReadLine())
+                    while (!_suspended)
                     {
-                        input = input.Trim();
-                        Int16 number;
-                        if (Int16.TryParse(input, out number))
+                        for (string input = _serialPort.ReadLine(); input != ""; input = _serialPort.ReadLine())
                         {
-                            _inputs.Enqueue(number);
+                            input = input.Trim();
+                            Int16 number;
+                            if (Int16.TryParse(input, out number))
+                            {
+                                _inputs.Enqueue(number);
+                            }
                         }
                     }
-                }
-            });
-            t.Start();
+                });
+                t.Start();
+            }
         }
 
         private void SerialDataReceived(object sender, SerialDataReceivedEventArgs e)
@@ -68,9 +71,12 @@ namespace SerialTest
         //Should be called on Stop
         public void StopListening()
         {
-            _suspended = true;
-            _serialPort.DataReceived -= SerialDataReceived;
-            _serialPort.Close();
+            if (_serialPort != null)
+            {
+                _suspended = true;
+                _serialPort.DataReceived -= SerialDataReceived;
+                _serialPort.Close();
+            }
         }
 
         //Called once every Tick

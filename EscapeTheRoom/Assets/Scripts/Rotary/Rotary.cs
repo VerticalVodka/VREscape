@@ -5,7 +5,7 @@ using UnityEngine;
 namespace VREscape
 {
     [RequireComponent(typeof(Renderer))]
-    class Rotary : MonoBehaviour
+    public class Rotary : MonoBehaviour
     {
         private AudioSource _audioSource;
         private Renderer _renderer;

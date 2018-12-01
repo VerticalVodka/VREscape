@@ -16,7 +16,7 @@ namespace VREscape
         public AudioClip ButtonReleaseSound;
         public Enums.ButtonEnum ButtonType;
 
-        private bool _isPressed = false;
+        public bool IsPressed { get; private set; } = false;
 
         // Use this for initialization
         protected void Start()
@@ -31,21 +31,21 @@ namespace VREscape
         {
             if (_hwManager.GetButtonState(ButtonType))
             {
-                if (!_isPressed)
+                if (!IsPressed)
                 {
                     ButtonDown();
                 }
 
-                _isPressed = true;
+                IsPressed = true;
             }
             else
             {
-                if (_isPressed)
+                if (IsPressed)
                 {
                     ButtonUp();
                 }
 
-                _isPressed = false;
+                IsPressed = false;
             }
         }
 

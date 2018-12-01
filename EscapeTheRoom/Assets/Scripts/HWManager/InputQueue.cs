@@ -2,6 +2,7 @@
 using System.Collections.Concurrent;
 using System.Collections.Generic;
 using System.IO.Ports;
+using System.Linq;
 using System.Threading;
 using UnityEngine;
 
@@ -17,16 +18,17 @@ namespace SerialTest
         public InputQueue(string serialInterface)
         {
             _inputs = new ConcurrentQueue<int>();
-            try
-            {
-                _serialPort = new SerialPort(serialInterface);
-            }
-            catch (Exception e)
+            if (!SerialPort.GetPortNames().Contains("serialInterface"))
             {
                 Debug.Log("Could not Open Serial Port. Did you sepcify the right COM Port? Check your device manager");
                 Debug.Log("External Hardware Input not available");
-                Debug.LogError(e.StackTrace);
+                return;
             }
+
+            _serialPort = new SerialPort(serialInterface);
+            _serialPort.Open();
+            _serialPort.ReadExisting();
+            _serialPort.Close();
         }
 
         //Called on Startup

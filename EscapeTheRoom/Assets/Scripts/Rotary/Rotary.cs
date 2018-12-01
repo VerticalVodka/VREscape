@@ -21,7 +21,7 @@ namespace VREscape
         public int StartValue;
         public int CurrentState;
 
-        protected void Start()
+        public void Start()
         {
             _hwManager = FindObjectOfType<HWManager>();
             _audioSource = FindObjectOfType<AudioSource>();
@@ -34,7 +34,7 @@ namespace VREscape
             _audioSource?.PlayOneShot(RadioTurnSound);
         }
 
-        private void Update()
+        public void Update()
         {
             int newRotaryState = _hwManager.GetRotaryState(RotaryType) + CurrentState;
             if (newRotaryState != CurrentState)

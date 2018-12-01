@@ -33,6 +33,11 @@ namespace VREscape
 
         public event Action<bool> OnRiddleDone;
 
+        public void Start()
+        {
+            StartRiddle();
+        }
+
         public void StartRiddle()
         {
             Debug.Log("RiddleRadio started");
@@ -81,12 +86,14 @@ namespace VREscape
 
         private IEnumerator Do()
         {
-            while (_radioRotary.CurrentState != 1441)
+            while (_radioRotary.CurrentState != 1001)
                 yield return new WaitForSecondsRealtime(0);
+            Debug.Log("Right Frequence");
             _radioRotary.Frequencies.Add(1042, Instruction1042Clue1);
             _radioRotary.Frequencies.Add(0815, Instruction0815Clue2);
             while (!RiddleSolved())
                 yield return new WaitForSecondsRealtime(0);
+            Debug.Log("Solved Riddle");
             _radioRotary.Frequencies.Clear();
         }
 

@@ -1,0 +1,173 @@
+fileFormatVersion: 2
+guid: 58de3d9a15e02d74eacb902037d7610e
+ModelImporter:
+  serializedVersion: 23
+  fileIDToRecycleName:
+    100000: //RootNode
+    100002: Room_Desk_Body
+    100004: Room_Desk_Drawer
+    100006: Room_Desk_DrawerLight
+    100008: Room_Desk_Safe_RotaryControler
+    100010: Room_Desk_SafeDoor
+    100012: Room_Floor
+    100014: Room_Light_DownTable
+    100016: SilingLight_Black_1
+    100018: SilingLight_Black_2
+    100020: SilingLight_Light_1
+    100022: SilingLight_Light_2
+    100024: SilingLight_White_1
+    100026: SilingLight_White_2
+    100028: SilingLight_White_3
+    100030: SilingLight_White_4
+    100032: SilingLight_White_5
+    400000: //RootNode
+    400002: Room_Desk_Body
+    400004: Room_Desk_Drawer
+    400006: Room_Desk_DrawerLight
+    400008: Room_Desk_Safe_RotaryControler
+    400010: Room_Desk_SafeDoor
+    400012: Room_Floor
+    400014: Room_Light_DownTable
+    400016: SilingLight_Black_1
+    400018: SilingLight_Black_2
+    400020: SilingLight_Light_1
+    400022: SilingLight_Light_2
+    400024: SilingLight_White_1
+    400026: SilingLight_White_2
+    400028: SilingLight_White_3
+    400030: SilingLight_White_4
+    400032: SilingLight_White_5
+    2100000: Material
+    2100002: ligth
+    2100004: black
+    2100006: ligth2
+    2300000: Room_Desk_Body
+    2300002: Room_Desk_Drawer
+    2300004: Room_Desk_DrawerLight
+    2300006: Room_Desk_Safe_RotaryControler
+    2300008: Room_Desk_SafeDoor
+    2300010: Room_Floor
+    2300012: Room_Light_DownTable
+    2300014: SilingLight_Black_1
+    2300016: SilingLight_Black_2
+    2300018: SilingLight_Light_1
+    2300020: SilingLight_Light_2
+    2300022: SilingLight_White_1
+    2300024: SilingLight_White_2
+    2300026: SilingLight_White_3
+    2300028: SilingLight_White_4
+    2300030: SilingLight_White_5
+    3300000: Room_Desk_Body
+    3300002: Room_Desk_Drawer
+    3300004: Room_Desk_DrawerLight
+    3300006: Room_Desk_Safe_RotaryControler
+    3300008: Room_Desk_SafeDoor
+    3300010: Room_Floor
+    3300012: Room_Light_DownTable
+    3300014: SilingLight_Black_1
+    3300016: SilingLight_Black_2
+    3300018: SilingLight_Light_1
+    3300020: SilingLight_Light_2
+    3300022: SilingLight_White_1
+    3300024: SilingLight_White_2
+    3300026: SilingLight_White_3
+    3300028: SilingLight_White_4
+    3300030: SilingLight_White_5
+    4300000: Room_Desk_Body
+    4300002: Room_Desk_Drawer
+    4300004: SilingLight_White_5
+    4300006: SilingLight_White_4
+    4300008: SilingLight_White_3
+    4300010: SilingLight_White_1
+    4300012: SilingLight_White_2
+    4300014: SilingLight_Light_1
+    4300016: SilingLight_Light_2
+    4300018: SilingLight_Black_2
+    4300020: SilingLight_Black_1
+    4300022: Room_Desk_Safe_RotaryControler
+    4300024: Room_Desk_DrawerLight
+    4300026: Room_Desk_SafeDoor
+    4300028: Room_Floor
+    4300030: Room_Light_DownTable
+  externalObjects: {}
+  materials:
+    importMaterials: 1
+    materialName: 0
+    materialSearch: 1
+    materialLocation: 1
+  animations:
+    legacyGenerateAnimations: 4
+    bakeSimulation: 0
+    resampleCurves: 1
+    optimizeGameObjects: 0
+    motionNodeName: 
+    rigImportErrors: 
+    rigImportWarnings: 
+    animationImportErrors: 
+    animationImportWarnings: 
+    animationRetargetingWarnings: 
+    animationDoRetargetingWarnings: 0
+    importAnimatedCustomProperties: 0
+    importConstraints: 0
+    animationCompression: 1
+    animationRotationError: 0.5
+    animationPositionError: 0.5
+    animationScaleError: 0.5
+    animationWrapMode: 0
+    extraExposedTransformPaths: []
+    extraUserProperties: []
+    clipAnimations: []
+    isReadable: 1
+  meshes:
+    lODScreenPercentages: []
+    globalScale: 1
+    meshCompression: 0
+    addColliders: 0
+    importVisibility: 1
+    importBlendShapes: 1
+    importCameras: 1
+    importLights: 1
+    swapUVChannels: 0
+    generateSecondaryUV: 0
+    useFileUnits: 1
+    optimizeMeshForGPU: 1
+    keepQuads: 0
+    weldVertices: 1
+    preserveHierarchy: 0
+    indexFormat: 0
+    secondaryUVAngleDistortion: 8
+    secondaryUVAreaDistortion: 15.000001
+    secondaryUVHardAngle: 88
+    secondaryUVPackMargin: 4
+    useFileScale: 1
+    previousCalculatedGlobalScale: 1
+    hasPreviousCalculatedGlobalScale: 0
+  tangentSpace:
+    normalSmoothAngle: 60
+    normalImportMode: 0
+    tangentImportMode: 3
+    normalCalculationMode: 4
+  importAnimation: 1
+  copyAvatar: 0
+  humanDescription:
+    serializedVersion: 2
+    human: []
+    skeleton: []
+    armTwist: 0.5
+    foreArmTwist: 0.5
+    upperLegTwist: 0.5
+    legTwist: 0.5
+    armStretch: 0.05
+    legStretch: 0.05
+    feetSpacing: 0
+    rootMotionBoneName: 
+    hasTranslationDoF: 0
+    hasExtraRoot: 0
+    skeletonHasParents: 1
+  lastHumanDescriptionAvatarSource: {instanceID: 0}
+  animationType: 0
+  humanoidOversampling: 1
+  additionalBone: 0
+  userData: 
+  assetBundleName: 
+  assetBundleVariant: 

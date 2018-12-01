@@ -46,11 +46,11 @@ namespace VREscape
             _radioRotary = FindObjectOfType<RadioRotary>();
             _buttonAudioSource = GetComponent<AudioSource>();
             _instructionSource = GetComponent<AudioSource>();
+            _radioRotary.IsRadioOn = true;
             _radioRotary.Frequencies.Add(927, Instruction927Start);
             _instructionSource.clip = RiddleInstruction;
             _instructionSource.Play();
             StartCoroutine(Do());
-            OnRiddleDone?.Invoke(true);
         }
 
         public void Update()
@@ -103,11 +103,13 @@ namespace VREscape
                 yield return new WaitForSecondsRealtime(0);
             Debug.Log("Right Frequence");
             _radioRotary.Frequencies.Add(1104, Instruction1104Clue1);
-            _radioRotary.Frequencies.Add(0800, Instruction0800Clue2);
+            _radioRotary.Frequencies.Add(800, Instruction0800Clue2);
             while (!RiddleSolved())
                 yield return new WaitForSecondsRealtime(0);
             Debug.Log("Solved Riddle");
             _radioRotary.Frequencies.Clear();
+            _radioRotary.IsRadioOn = false;
+            OnRiddleDone?.Invoke(true);
         }
 
         private bool RiddleSolved()

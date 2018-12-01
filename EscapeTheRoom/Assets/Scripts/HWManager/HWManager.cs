@@ -13,8 +13,9 @@ namespace VREscape
     {
         private Dictionary<Enums.ButtonEnum, bool> _buttons;
         private Dictionary<Enums.RotaryEnum, int> _rotaries;
-        private const bool TestMode = true;
-        private readonly InputQueue _inputQueue = new InputQueue("COM5");
+        public bool TestMode = true;
+        public string COMPort = "COM5";
+        private InputQueue _inputQueue;
 
         public int UpdatesPerSecond = 10;
 
@@ -25,6 +26,7 @@ namespace VREscape
         public void Awake()
         {
             deltaTime = 1.0f / UpdatesPerSecond;
+            _inputQueue = new InputQueue(COMPort);
             
             _buttons = new Dictionary<Enums.ButtonEnum, bool>
             {

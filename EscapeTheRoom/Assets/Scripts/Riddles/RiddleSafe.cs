@@ -22,7 +22,7 @@ namespace VREscape
             Debug.Log("RiddleSafe started");
             _combinationProgress = 0;
             _audioSource = GetComponent<AudioSource>();
-            StartRiddle();
+
         }
 
         public void StartRiddle()

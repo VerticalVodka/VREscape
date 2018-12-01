@@ -7,20 +7,22 @@ namespace VREscape
 {
     public class GameManager : MonoBehaviour
     {
-        public List<IRiddle> riddles;
-        private IEnumerator<IRiddle> currentRiddle;
+        public List<IRiddle> Riddles = new List<IRiddle>();
+        private IEnumerator<IRiddle> riddleEnumerator;
 
         private void NextRiddle()
         {
-            if (currentRiddle.MoveNext())
+            if (riddleEnumerator.MoveNext())
             {
-                currentRiddle.Current.OnRiddleDone += OnRiddleDoneListener;
+                riddleEnumerator.Current.OnRiddleDone += OnRiddleDoneListener;
+                riddleEnumerator.Current.StartRiddle();
             }
         }
 
         void OnRiddleDoneListener(bool value)
         {
-            currentRiddle.Current.OnRiddleDone -= OnRiddleDoneListener;
+            riddleEnumerator.Current.OnRiddleDone -= OnRiddleDoneListener;
+
             NextRiddle();
         }
 
@@ -29,12 +31,14 @@ namespace VREscape
         {
             try
             {
-                currentRiddle = riddles.GetEnumerator();
+                Riddles.Add(FindObjectOfType<RiddleRadio>());
+                Riddles.Add(FindObjectOfType<RiddleSafe>());
+                riddleEnumerator = Riddles.GetEnumerator();
                 NextRiddle();
             }
             catch (Exception e)
             {
-                
+                Debug.Log("GameManager Failed");
             }
         }
 

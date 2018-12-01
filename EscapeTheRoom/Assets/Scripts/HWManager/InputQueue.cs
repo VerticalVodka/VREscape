@@ -116,7 +116,10 @@ namespace SerialTest
 
         public void SendData(string data)
         {
-            _serialPort.WriteLine(data);
+            if (_serialPort != null)
+            {
+                _serialPort.WriteLine(data);
+            }
         }
 
         private void ProcessValue(int data, Dictionary<Enums.ButtonEnum, bool> buttons,

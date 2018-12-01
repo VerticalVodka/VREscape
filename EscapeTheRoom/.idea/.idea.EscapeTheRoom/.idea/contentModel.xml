@@ -31,6 +31,7 @@
             <e p="IRiddle.cs" t="Include" />
             <e p="RiddleRadio.cs" t="Include" />
             <e p="RiddleSafe.cs" t="Include" />
+            <e p="SimonSaysRiddle.cs" t="Include" />
           </e>
           <e p="Rotary" t="Include">
             <e p="RadioRotary.cs" t="Include" />

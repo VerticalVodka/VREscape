@@ -2,6 +2,8 @@
 using System.Collections.Concurrent;
 using System.Collections.Generic;
 using System.IO.Ports;
+using System.Threading;
+using UnityEngine;
 
 namespace SerialTest
 {
@@ -9,8 +11,8 @@ namespace SerialTest
     {
         private readonly SerialPort _serialPort;
         private readonly ConcurrentQueue<int> _inputs;
-        readonly object _mutex = new object();
-        private int _messageCount = 0;
+
+        private bool _suspended;
 
         public InputQueue(string serialInterface)
         {
@@ -21,8 +23,24 @@ namespace SerialTest
         //Called on Startup
         public void StartListening()
         {
-            _serialPort.DataReceived += SerialDataReceived;
+            //_serialPort.DataReceived += SerialDataReceived;
             _serialPort.Open();
+            Thread t = new Thread(() =>
+            {
+                while (!_suspended)
+                {
+                    for (string input = _serialPort.ReadLine(); input != ""; input = _serialPort.ReadLine())
+                    {
+                        input = input.Trim();
+                        Int16 number;
+                        if (Int16.TryParse(input, out number))
+                        {
+                            _inputs.Enqueue(number);
+                        }
+                    }
+                }
+            });
+            t.Start();
         }
 
         private void SerialDataReceived(object sender, SerialDataReceivedEventArgs e)
@@ -34,10 +52,6 @@ namespace SerialTest
                 if (Int16.TryParse(input, out number))
                 {
                     _inputs.Enqueue(number);
-                    lock (_mutex)
-                    {
-                        _messageCount++;
-                    }
                 }
             }
         }
@@ -45,6 +59,7 @@ namespace SerialTest
         //Should be called on Stop
         public void StopListening()
         {
+            _suspended = true;
             _serialPort.DataReceived -= SerialDataReceived;
             _serialPort.Close();
         }
@@ -59,18 +74,13 @@ namespace SerialTest
             InitRotary(rotary);
 
 
-            int currentMessageCount = _messageCount;
+            int currentMessageCount = _inputs.Count;
             if (currentMessageCount <= 0) return;
             for (int i = 0; i < currentMessageCount; i++)
             {
                 int data;
                 _inputs.TryDequeue(out data);
                 ProcessValue(data, buttons, rotary);
-            }
-
-            lock (_mutex)
-            {
-                _messageCount -= currentMessageCount;
             }
         }
 

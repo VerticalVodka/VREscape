@@ -568,6 +568,8 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 8673e0a4110cc0c40b6a3a9b36fcce83, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
+  TestMode: 0
+  COMPort: COM5
   UpdatesPerSecond: 20
 --- !u!4 &1775799600
 Transform:

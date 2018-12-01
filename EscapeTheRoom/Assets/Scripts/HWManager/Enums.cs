@@ -12,7 +12,8 @@ public static class Enums
         Button3,
         Button4,
         Rotary1,
-        Rotary2
+        Rotary2,
+        Button5
     }
 
     public enum RotaryEnum
@@ -26,6 +27,8 @@ public static class Enums
         [Description("s")]
         Safe,
         [Description("d")]
-        Drawer
+        Drawer,
+        [Description("x")]
+        Test
     }
 }

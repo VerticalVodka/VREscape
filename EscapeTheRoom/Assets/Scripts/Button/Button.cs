@@ -10,7 +10,7 @@ namespace VREscape
     {
         private AudioSource _audioSource;
         private Renderer _renderer;
-        private HWManager _hwManager;
+        protected HWManager HwManager;
 
         public AudioClip ButtonClickSound;
         public AudioClip ButtonReleaseSound;
@@ -21,7 +21,7 @@ namespace VREscape
         // Use this for initialization
         protected void Start()
         {
-            _hwManager = FindObjectOfType<HWManager>();
+            HwManager = FindObjectOfType<HWManager>();
             _audioSource = FindObjectOfType<AudioSource>();
             _renderer = GetComponent<Renderer>();
         }
@@ -29,7 +29,7 @@ namespace VREscape
         // Update is called once per frame
         void Update()
         {
-            if (_hwManager.GetButtonState(ButtonType))
+            if (HwManager.GetButtonState(ButtonType))
             {
                 if (!IsPressed)
                 {

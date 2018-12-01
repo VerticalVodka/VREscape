@@ -7,7 +7,7 @@ namespace VREscape
 {
     public class GameManager : MonoBehaviour
     {
-        private IList<IRiddle> riddles;
+        public List<IRiddle> riddles;
         private IEnumerator<IRiddle> currentRiddle;
 
         private void NextRiddle()
@@ -27,7 +27,6 @@ namespace VREscape
         // Use this for initialization
         void Start()
         {
-            riddles = new List<IRiddle>() { new RiddleRadio(), new RiddleRadio(), new RiddleRadio() };
             currentRiddle = riddles.GetEnumerator();
             NextRiddle();
         }

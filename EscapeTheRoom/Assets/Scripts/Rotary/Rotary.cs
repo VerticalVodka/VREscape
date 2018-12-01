@@ -12,7 +12,6 @@ namespace VREscape
         private HWManager _hwManager;
 
         protected bool flips; // if MaxValue++ becomes MinValue
-        protected int currentState;
 
         public AudioClip RadioTurnSound;
         public Enums.RotaryEnum RotaryType;
@@ -20,13 +19,14 @@ namespace VREscape
         public int MinValue;
         public int MaxValue;
         public int StartValue;
+        public int CurrentState;
 
         protected void Start()
         {
             _hwManager = FindObjectOfType<HWManager>();
             _audioSource = FindObjectOfType<AudioSource>();
             _renderer = GetComponent<Renderer>();
-            currentState = StartValue;
+            CurrentState = StartValue;
         }
 
         protected virtual void RotaryTurned()
@@ -37,11 +37,27 @@ namespace VREscape
         private void Update()
         {
             int newRotaryState = _hwManager.GetRotaryState(RotaryType);
-            if (newRotaryState != currentState)
+            if (newRotaryState != CurrentState)
             {
-                int rotation = newRotaryState - currentState;
+                int rotation = newRotaryState - CurrentState;
                 gameObject.transform.Rotate(Vector3.forward, (360 / StepSize * rotation));
-                currentState = newRotaryState;
+                CurrentState = newRotaryState;
+                if (flips && CurrentState > MaxValue)
+                {
+                    CurrentState = MinValue + CurrentState - MaxValue;
+                }
+                else if(flips && CurrentState < MinValue)
+                {
+                    CurrentState = MaxValue - CurrentState - MinValue;
+                }
+                else if(!flips && CurrentState > MaxValue)
+                {
+                    CurrentState = MaxValue;
+                }
+                else // !flips && CurrentState < MinValue
+                {
+                    CurrentState = MinValue;
+                }
             }
         }
 

@@ -16,9 +16,16 @@ namespace VREscape
         private const bool TestMode = true;
         private readonly InputQueue _inputQueue = new InputQueue("COM5");
 
+        public int UpdatesPerSecond = 10;
+
+        private float deltaTime;
+        private float interpolatedTime = 0.0f;
+
 
         public void Awake()
         {
+            deltaTime = 1.0f / UpdatesPerSecond;
+            
             _buttons = new Dictionary<Enums.ButtonEnum, bool>
             {
                 {Enums.ButtonEnum.Button1, false},
@@ -33,6 +40,12 @@ namespace VREscape
                 {Enums.RotaryEnum.Rotary1, 0},
                 {Enums.RotaryEnum.Rotary2, 0}
             };
+            _inputQueue.StartListening();
+        }
+
+        private void OnDestroy()
+        {
+            _inputQueue.StopListening();
         }
 
         public bool GetButtonState(Enums.ButtonEnum button)
@@ -47,13 +60,24 @@ namespace VREscape
 
         public void SendValue(Enums.UnlockEnum unlockEnum)
         {
-            _inputQueue.SendData(unlockEnum.GetEnumDescription());
+            _inputQueue.SendData(unlockEnum.GetDescription());
         }
 
         public void Update()
         {
+            deltaTime += Time.deltaTime;
+ 
+            if (deltaTime >= interpolatedTime) {
+                deltaTime = 0.0f;
+                UpdateInputs();
+            }
+            
+        }
+
+        private void UpdateInputs()
+        {
             _inputQueue.ProcessData(out _buttons, out _rotaries);
-            if (!TestMode) return;
+            if (TestMode) return;
             _buttons[Enums.ButtonEnum.Button1] = Input.GetKey(KeyCode.Alpha1);
             _buttons[Enums.ButtonEnum.Button2] = Input.GetKey(KeyCode.Alpha2);
             _buttons[Enums.ButtonEnum.Button3] = Input.GetKey(KeyCode.Alpha3);

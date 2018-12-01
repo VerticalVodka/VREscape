@@ -8,26 +8,25 @@ namespace VREscape
     {
         private Transform bumper;
 
-        public float Scale;
+        private float Scale;
 
         // Use this for initialization
         void Start()
         {
             base.Start();
             bumper = transform.Find("bumper");
-            Scale = bumper.transform.position.y / 2;
+            Scale = bumper.transform.position.y / 5;
         }
 
         protected override void ButtonDown()
         {
-            bumper.Translate(bumper.transform.up * Scale);
-            //HwManager.SendValue(Enums.UnlockEnum.Drawer);
+            bumper.Translate(bumper.transform.up * -Scale);
             base.ButtonDown();
         }
 
         protected override void ButtonUp()
         {
-            bumper.Translate(bumper.transform.up * -Scale);
+            bumper.Translate(bumper.transform.up * Scale);
             base.ButtonDown();
         }
     }

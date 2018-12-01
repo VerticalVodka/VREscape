@@ -25,12 +25,18 @@
             <e p="InputQueue.cs" t="Include" />
           </e>
           <e p="ObjectScripts" t="Include">
-            <e p="ButtonScript.cs" t="Include" />
             <e p="RotaryScript.cs" t="Include" />
           </e>
           <e p="Riddles" t="Include">
             <e p="IRiddle.cs" t="Include" />
             <e p="RiddleRadio.cs" t="Include" />
+            <e p="RiddleSafe.cs" t="Include" />
+            <e p="SimonSaysRiddle.cs" t="Include" />
+          </e>
+          <e p="Rotary" t="Include">
+            <e p="RadioRotary.cs" t="Include" />
+            <e p="Rotary.cs" t="Include" />
+            <e p="SafeRotary.cs" t="Include" />
           </e>
         </e>
         <e p="SteamVR" t="Include">

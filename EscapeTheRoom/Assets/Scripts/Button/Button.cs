@@ -5,11 +5,10 @@ using VREscape;
 
 namespace VREscape
 {
-    [RequireComponent(typeof(Renderer))]
+    [RequireComponent(typeof(AudioSource))]
     public class Button : MonoBehaviour
     {
         private AudioSource _audioSource;
-        private Renderer _renderer;
         protected HWManager HwManager;
 
         public AudioClip ButtonClickSound;
@@ -23,7 +22,6 @@ namespace VREscape
         {
             HwManager = FindObjectOfType<HWManager>();
             _audioSource = FindObjectOfType<AudioSource>();
-            _renderer = GetComponent<Renderer>();
         }
 
         // Update is called once per frame

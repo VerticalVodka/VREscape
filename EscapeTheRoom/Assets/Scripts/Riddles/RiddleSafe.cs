@@ -24,8 +24,6 @@ namespace VREscape
         public void StartRiddle()
         {
             StartCoroutine(SafeRoutine());
-            Debug.Log("RiddleSafe solved");
-            OnRiddleDone?.Invoke(true);
         }
 
         private void Update()
@@ -34,11 +32,10 @@ namespace VREscape
 
         private IEnumerator SafeRoutine()
         {
+            Debug.Log($"SafeRotaryValue :{SafeRotary.CurrentState}");
             while (_combinationProgress < Combination.Count)
             {
 
-                Debug.Log($"SafeRotaryValue :{SafeRotary.CurrentState}");
-                Debug.Log($"Next Target: {Combination[_combinationProgress]}");
                 if (_combinationProgress > 0 && ((Combination[_combinationProgress - 1] < 0 && SafeRotary.CurrentState < Combination[_combinationProgress - 1])
                     || (Combination[_combinationProgress - 1] > 0 && SafeRotary.CurrentState > Combination[_combinationProgress - 1])))
                 { // Mistakes were made
@@ -48,16 +45,21 @@ namespace VREscape
                 }
                 else if (Combination[_combinationProgress] != SafeRotary.CurrentState)
                 {
-                    Debug.Log("Not there yet");
                     yield return new WaitForSecondsRealtime(0);
                 }
                 else
                 {
                     Debug.Log("Combination " + _combinationProgress + " found");
+                    if (_combinationProgress < Combination.Count - 1)
+                    {
+                        Debug.Log($"Next Target: {Combination[_combinationProgress + 1]}");
+                    }
                     _combinationProgress++;
                     yield return new WaitForSecondsRealtime(0);
                 }
             }
+            Debug.Log("RiddleSafe solved");
+            OnRiddleDone?.Invoke(true);
         }
     }
 }

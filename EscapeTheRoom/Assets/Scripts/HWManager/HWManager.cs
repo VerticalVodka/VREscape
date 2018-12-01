@@ -25,7 +25,8 @@ namespace VREscape
 
         public void Awake()
         {
-            deltaTime = 1.0f / UpdatesPerSecond;
+            Application.targetFrameRate = 100;
+            deltaTime = 1.0f / (float)UpdatesPerSecond;
             _inputQueue = new InputQueue(COMPort);
 
             _buttons = new Dictionary<Enums.ButtonEnum, bool>
@@ -34,6 +35,7 @@ namespace VREscape
                 {Enums.ButtonEnum.Button2, false},
                 {Enums.ButtonEnum.Button3, false},
                 {Enums.ButtonEnum.Button4, false},
+                {Enums.ButtonEnum.Button5, false},
                 {Enums.ButtonEnum.Rotary1, false},
                 {Enums.ButtonEnum.Rotary2, false}
             };
@@ -87,11 +89,11 @@ namespace VREscape
             if (!TestMode) return;
             if (Input.GetKey(KeyCode.Alpha1))
                 _buttons[Enums.ButtonEnum.Button1] = true;
-            if (Input.GetKey(KeyCode.Alpha1))
+            if (Input.GetKey(KeyCode.Alpha2))
                 _buttons[Enums.ButtonEnum.Button2] = true;
-            if (Input.GetKey(KeyCode.Alpha1))
+            if (Input.GetKey(KeyCode.Alpha3))
                 _buttons[Enums.ButtonEnum.Button3] = true;
-            if (Input.GetKey(KeyCode.Alpha1))
+            if (Input.GetKey(KeyCode.Alpha4))
                 _buttons[Enums.ButtonEnum.Button4] = true;
             _rotaries[Enums.RotaryEnum.Rotary1] += Input.GetKeyDown(KeyCode.RightArrow) ? 1 : 0;
             _rotaries[Enums.RotaryEnum.Rotary1] += Input.GetKeyDown(KeyCode.LeftArrow) ? -1 : 0;

@@ -31,24 +31,27 @@ namespace SerialTest
         //Called on Startup
         public void StartListening()
         {
-            //_serialPort.DataReceived += SerialDataReceived;
-            _serialPort.Open();
-            Thread t = new Thread(() =>
+            if (_serialPort != null)
             {
-                while (!_suspended)
+                //_serialPort.DataReceived += SerialDataReceived;
+                _serialPort.Open();
+                Thread t = new Thread(() =>
                 {
-                    for (string input = _serialPort.ReadLine(); input != ""; input = _serialPort.ReadLine())
+                    while (!_suspended)
                     {
-                        input = input.Trim();
-                        Int16 number;
-                        if (Int16.TryParse(input, out number))
+                        for (string input = _serialPort.ReadLine(); input != ""; input = _serialPort.ReadLine())
                         {
-                            _inputs.Enqueue(number);
+                            input = input.Trim();
+                            Int16 number;
+                            if (Int16.TryParse(input, out number))
+                            {
+                                _inputs.Enqueue(number);
+                            }
                         }
                     }
-                }
-            });
-            t.Start();
+                });
+                t.Start();
+            }
         }
 
         private void SerialDataReceived(object sender, SerialDataReceivedEventArgs e)
@@ -113,7 +116,10 @@ namespace SerialTest
 
         public void SendData(string data)
         {
-            _serialPort.WriteLine(data);
+            if (_serialPort != null)
+            {
+                _serialPort.WriteLine(data);
+            }
         }
 
         private void ProcessValue(int data, Dictionary<Enums.ButtonEnum, bool> buttons,

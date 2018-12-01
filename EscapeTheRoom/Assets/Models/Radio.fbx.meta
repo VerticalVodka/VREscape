@@ -1,0 +1,132 @@
+fileFormatVersion: 2
+guid: e2f0616f5b061a04488b0616e9d587c2
+ModelImporter:
+  serializedVersion: 23
+  fileIDToRecycleName:
+    100000: //RootNode
+    100002: Radio_Antena
+    100004: Radio_Body
+    100006: Radio_FreqController
+    100008: Radio_OnOffController
+    100010: Radio_Point
+    100012: Radio_Speaker
+    100014: Radio_SpeakerLightRing
+    400000: //RootNode
+    400002: Radio_Antena
+    400004: Radio_Body
+    400006: Radio_FreqController
+    400008: Radio_OnOffController
+    400010: Radio_Point
+    400012: Radio_Speaker
+    400014: Radio_SpeakerLightRing
+    2100000: Shape.010
+    2100002: Shape.007
+    2100004: Shape.006
+    2100006: Shape.005
+    2100008: Shape.004
+    2100010: Shape.003
+    2100012: Shape.001
+    2100014: Shape
+    2300000: Radio_Antena
+    2300002: Radio_Body
+    2300004: Radio_FreqController
+    2300006: Radio_OnOffController
+    2300008: Radio_Point
+    2300010: Radio_Speaker
+    2300012: Radio_SpeakerLightRing
+    3300000: Radio_Antena
+    3300002: Radio_Body
+    3300004: Radio_FreqController
+    3300006: Radio_OnOffController
+    3300008: Radio_Point
+    3300010: Radio_Speaker
+    3300012: Radio_SpeakerLightRing
+    4300000: Radio_FreqController
+    4300002: Radio_Point
+    4300004: Radio_Antena
+    4300006: Radio_OnOffController
+    4300008: Radio_Body
+    4300010: Radio_Speaker
+    4300012: Radio_SpeakerLightRing
+  externalObjects: {}
+  materials:
+    importMaterials: 1
+    materialName: 0
+    materialSearch: 1
+    materialLocation: 1
+  animations:
+    legacyGenerateAnimations: 4
+    bakeSimulation: 0
+    resampleCurves: 1
+    optimizeGameObjects: 0
+    motionNodeName: 
+    rigImportErrors: 
+    rigImportWarnings: 
+    animationImportErrors: 
+    animationImportWarnings: 
+    animationRetargetingWarnings: 
+    animationDoRetargetingWarnings: 0
+    importAnimatedCustomProperties: 0
+    importConstraints: 0
+    animationCompression: 1
+    animationRotationError: 0.5
+    animationPositionError: 0.5
+    animationScaleError: 0.5
+    animationWrapMode: 0
+    extraExposedTransformPaths: []
+    extraUserProperties: []
+    clipAnimations: []
+    isReadable: 1
+  meshes:
+    lODScreenPercentages: []
+    globalScale: 1
+    meshCompression: 0
+    addColliders: 0
+    importVisibility: 1
+    importBlendShapes: 1
+    importCameras: 1
+    importLights: 1
+    swapUVChannels: 0
+    generateSecondaryUV: 0
+    useFileUnits: 1
+    optimizeMeshForGPU: 1
+    keepQuads: 0
+    weldVertices: 1
+    preserveHierarchy: 0
+    indexFormat: 0
+    secondaryUVAngleDistortion: 8
+    secondaryUVAreaDistortion: 15.000001
+    secondaryUVHardAngle: 88
+    secondaryUVPackMargin: 4
+    useFileScale: 1
+    previousCalculatedGlobalScale: 1
+    hasPreviousCalculatedGlobalScale: 0
+  tangentSpace:
+    normalSmoothAngle: 60
+    normalImportMode: 0
+    tangentImportMode: 3
+    normalCalculationMode: 4
+  importAnimation: 1
+  copyAvatar: 0
+  humanDescription:
+    serializedVersion: 2
+    human: []
+    skeleton: []
+    armTwist: 0.5
+    foreArmTwist: 0.5
+    upperLegTwist: 0.5
+    legTwist: 0.5
+    armStretch: 0.05
+    legStretch: 0.05
+    feetSpacing: 0
+    rootMotionBoneName: 
+    hasTranslationDoF: 0
+    hasExtraRoot: 0
+    skeletonHasParents: 1
+  lastHumanDescriptionAvatarSource: {instanceID: 0}
+  animationType: 0
+  humanoidOversampling: 1
+  additionalBone: 0
+  userData: 
+  assetBundleName: 
+  assetBundleVariant: 

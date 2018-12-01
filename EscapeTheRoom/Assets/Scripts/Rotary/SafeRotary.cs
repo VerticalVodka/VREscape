@@ -1,7 +1,7 @@
 ﻿
 namespace VREscape
 {
-    class SafeRotary : Rotary
+    public class SafeRotary : Rotary
     {
     }
 }

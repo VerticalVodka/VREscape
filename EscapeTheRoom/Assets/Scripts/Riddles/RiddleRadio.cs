@@ -15,9 +15,9 @@ namespace VREscape
         private readonly bool[] _isPressed = new bool[4];
 
         public AudioClip RiddleInstruction;
-        public AudioClip Instruction1441Start;
-        public AudioClip Instruction1042Clue1;
-        public AudioClip Instruction0815Clue2;
+        public AudioClip Instruction927Start;
+        public AudioClip Instruction1104Clue1;
+        public AudioClip Instruction0800Clue2;
         public AudioClip CorrectButton;
         public AudioClip WrongButton;
 
@@ -47,7 +47,7 @@ namespace VREscape
             _radioRotary = FindObjectOfType<RadioRotary>();
             _buttonAudioSource = GetComponent<AudioSource>();
             _instructionSource = GetComponent<AudioSource>();
-            _radioRotary.Frequencies.Add(1005, Instruction1441Start);
+            _radioRotary.Frequencies.Add(927, Instruction927Start);
             _instructionSource.clip = RiddleInstruction;
             _instructionSource.Play();
             StartCoroutine(Do());
@@ -56,6 +56,7 @@ namespace VREscape
 
         public void Update()
         {
+            Debug.Log(_radioRotary.CurrentState);
             if (!_isActive) return;
             var pressedButton = GetPressedButton();
             if (pressedButton == null) return;
@@ -99,11 +100,11 @@ namespace VREscape
 
         private IEnumerator Do()
         {
-            while (_radioRotary.CurrentState != 1005)
+            while (_radioRotary.CurrentState != 927)
                 yield return new WaitForSecondsRealtime(0);
             Debug.Log("Right Frequence");
-            _radioRotary.Frequencies.Add(1040, Instruction1042Clue1);
-            _radioRotary.Frequencies.Add(0815, Instruction0815Clue2);
+            _radioRotary.Frequencies.Add(1104, Instruction1104Clue1);
+            _radioRotary.Frequencies.Add(0800, Instruction0800Clue2);
             while (!RiddleSolved())
                 yield return new WaitForSecondsRealtime(0);
             Debug.Log("Solved Riddle");

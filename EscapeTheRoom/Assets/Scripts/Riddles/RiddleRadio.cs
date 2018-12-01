@@ -36,7 +36,6 @@ namespace VREscape
 
         public void Start()
         {
-            StartRiddle();
         }
 
         public void StartRiddle()
@@ -56,11 +55,11 @@ namespace VREscape
 
         public void Update()
         {
-            Debug.Log(_radioRotary.CurrentState);
+            //Debug.Log(_radioRotary.CurrentState);
             if (!_isActive) return;
             var pressedButton = GetPressedButton();
             if (pressedButton == null) return;
-            Debug.Log(pressedButton);
+            //Debug.Log(pressedButton);
             if (pressedButton == CorrectButtonOrder[_currentButton])
             {
                 _currentButton++;

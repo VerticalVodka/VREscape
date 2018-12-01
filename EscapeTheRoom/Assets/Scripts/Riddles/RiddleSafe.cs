@@ -16,13 +16,12 @@ namespace VREscape
 
         private void Start()
         {
-            Debug.Log("RiddleSafe started");
-            _combinationProgress = 0;
-            StartRiddle();
         }
 
         public void StartRiddle()
         {
+            Debug.Log("RiddleSafe started");
+            _combinationProgress = 0;
             StartCoroutine(SafeRoutine());
         }
 

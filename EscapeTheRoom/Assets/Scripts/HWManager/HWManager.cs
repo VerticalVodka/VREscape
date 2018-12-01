@@ -97,11 +97,11 @@ namespace VREscape
                 _buttons[Enums.ButtonEnum.Button4] = true;
             _rotaries[Enums.RotaryEnum.Rotary1] += Input.GetKeyDown(KeyCode.RightArrow) ? 1 : 0;
             _rotaries[Enums.RotaryEnum.Rotary1] += Input.GetKeyDown(KeyCode.LeftArrow) ? -1 : 0;
-            if (Input.GetKey(KeyCode.Alpha1))
+            if (Input.GetKey(KeyCode.Alpha5))
                 _buttons[Enums.ButtonEnum.Rotary1] = true;
-            _rotaries[Enums.RotaryEnum.Rotary1] += Input.GetKeyDown(KeyCode.D) ? 1 : 0;
-            _rotaries[Enums.RotaryEnum.Rotary1] += Input.GetKeyDown(KeyCode.A) ? -1 : 0;
-            if (Input.GetKey(KeyCode.Alpha1))
+            _rotaries[Enums.RotaryEnum.Rotary2] += Input.GetKeyDown(KeyCode.D) ? 1 : 0;
+            _rotaries[Enums.RotaryEnum.Rotary2] += Input.GetKeyDown(KeyCode.A) ? -1 : 0;
+            if (Input.GetKey(KeyCode.Alpha6))
                 _buttons[Enums.ButtonEnum.Rotary1] = true;
         }
     }

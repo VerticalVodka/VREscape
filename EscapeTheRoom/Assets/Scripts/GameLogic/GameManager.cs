@@ -27,8 +27,15 @@ namespace VREscape
         // Use this for initialization
         void Start()
         {
-            currentRiddle = riddles.GetEnumerator();
-            NextRiddle();
+            try
+            {
+                currentRiddle = riddles.GetEnumerator();
+                NextRiddle();
+            }
+            catch (Exception e)
+            {
+                
+            }
         }
 
         // Update is called once per frame

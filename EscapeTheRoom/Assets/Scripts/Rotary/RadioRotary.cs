@@ -25,7 +25,7 @@ namespace VREscape
                 if (Frequencies.ContainsKey(CurrentState + i))
                 {
                     ChannelAudioSource.volume = 1.0f / Mathf.Abs((float)i);
-                    BackGroundAudioSource.volume = (float)i / 5.0f;
+                    BackGroundAudioSource.volume =  (float)i / 5.0f;
                     if (!_channelIsPlaying)
                     {
                         ChannelAudioSource.clip = Frequencies[CurrentState + i];

@@ -25,7 +25,8 @@ namespace VREscape
 
         public void Awake()
         {
-            deltaTime = 1.0f / UpdatesPerSecond;
+            Application.targetFrameRate = 100;
+            deltaTime = 1.0f / (float)UpdatesPerSecond;
             _inputQueue = new InputQueue(COMPort);
 
             _buttons = new Dictionary<Enums.ButtonEnum, bool>

@@ -17,7 +17,16 @@ namespace SerialTest
         public InputQueue(string serialInterface)
         {
             _inputs = new ConcurrentQueue<int>();
-            _serialPort = new SerialPort(serialInterface);
+            try
+            {
+                _serialPort = new SerialPort(serialInterface);
+            }
+            catch (Exception e)
+            {
+                Debug.Log("Could not Open Serial Port. Did you sepcify the right COM Port? Check your device manager");
+                Debug.Log("External Hardware Input not available");
+                Debug.LogError(e.StackTrace);
+            }
         }
 
         //Called on Startup

@@ -27,7 +27,7 @@ namespace VREscape
         {
             deltaTime = 1.0f / UpdatesPerSecond;
             _inputQueue = new InputQueue(COMPort);
-            
+
             _buttons = new Dictionary<Enums.ButtonEnum, bool>
             {
                 {Enums.ButtonEnum.Button1, false},
@@ -68,28 +68,39 @@ namespace VREscape
         public void Update()
         {
             deltaTime += Time.deltaTime;
- 
-            if (deltaTime >= interpolatedTime) {
+
+            if (deltaTime >= interpolatedTime)
+            {
                 deltaTime = 0.0f;
                 UpdateInputs();
             }
-            
+            UpdateKeyboardInputs();
         }
 
         private void UpdateInputs()
         {
             _inputQueue.ProcessData(out _buttons, out _rotaries);
+        }
+
+        private void UpdateKeyboardInputs()
+        {
             if (!TestMode) return;
-            _buttons[Enums.ButtonEnum.Button1] = Input.GetKey(KeyCode.Alpha1);
-            _buttons[Enums.ButtonEnum.Button2] = Input.GetKey(KeyCode.Alpha2);
-            _buttons[Enums.ButtonEnum.Button3] = Input.GetKey(KeyCode.Alpha3);
-            _buttons[Enums.ButtonEnum.Button4] = Input.GetKey(KeyCode.Alpha4);
-            _rotaries[Enums.RotaryEnum.Rotary1] += Input.GetKeyDown(KeyCode.LeftArrow) ? 1 : 0;
-            _rotaries[Enums.RotaryEnum.Rotary1] += Input.GetKeyDown(KeyCode.RightArrow) ? -1 : 0;
-            _buttons[Enums.ButtonEnum.Rotary1] = Input.GetKey(KeyCode.DownArrow);
-            _rotaries[Enums.RotaryEnum.Rotary1] += Input.GetKeyDown(KeyCode.A) ? 1 : 0;
-            _rotaries[Enums.RotaryEnum.Rotary1] += Input.GetKeyDown(KeyCode.D) ? -1 : 0;
-            _buttons[Enums.ButtonEnum.Rotary1] = Input.GetKey(KeyCode.S);
+            if (Input.GetKey(KeyCode.Alpha1))
+                _buttons[Enums.ButtonEnum.Button1] = true;
+            if (Input.GetKey(KeyCode.Alpha1))
+                _buttons[Enums.ButtonEnum.Button2] = true;
+            if (Input.GetKey(KeyCode.Alpha1))
+                _buttons[Enums.ButtonEnum.Button3] = true;
+            if (Input.GetKey(KeyCode.Alpha1))
+                _buttons[Enums.ButtonEnum.Button4] = true;
+            _rotaries[Enums.RotaryEnum.Rotary1] += Input.GetKeyDown(KeyCode.RightArrow) ? 1 : 0;
+            _rotaries[Enums.RotaryEnum.Rotary1] += Input.GetKeyDown(KeyCode.LeftArrow) ? -1 : 0;
+            if (Input.GetKey(KeyCode.Alpha1))
+                _buttons[Enums.ButtonEnum.Rotary1] = true;
+            _rotaries[Enums.RotaryEnum.Rotary1] += Input.GetKeyDown(KeyCode.D) ? 1 : 0;
+            _rotaries[Enums.RotaryEnum.Rotary1] += Input.GetKeyDown(KeyCode.A) ? -1 : 0;
+            if (Input.GetKey(KeyCode.Alpha1))
+                _buttons[Enums.ButtonEnum.Rotary1] = true;
         }
     }
 }

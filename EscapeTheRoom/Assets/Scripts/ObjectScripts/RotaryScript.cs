@@ -26,7 +26,6 @@ namespace VREscape {
             int newRotaryState = hWManager.GetRotaryState(Rotary);
             if(newRotaryState != oldRotaryState)
             {
-                Debug.Log("asdasd");
                 rotate(newRotaryState - oldRotaryState);
             }
 

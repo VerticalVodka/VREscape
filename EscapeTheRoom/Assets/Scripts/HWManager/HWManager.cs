@@ -77,7 +77,7 @@ namespace VREscape
         private void UpdateInputs()
         {
             _inputQueue.ProcessData(out _buttons, out _rotaries);
-            if (TestMode) return;
+            if (!TestMode) return;
             _buttons[Enums.ButtonEnum.Button1] = Input.GetKey(KeyCode.Alpha1);
             _buttons[Enums.ButtonEnum.Button2] = Input.GetKey(KeyCode.Alpha2);
             _buttons[Enums.ButtonEnum.Button3] = Input.GetKey(KeyCode.Alpha3);

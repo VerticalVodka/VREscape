@@ -31,8 +31,8 @@ namespace VREscape
         {
             try
             {
-                Riddles.Add(FindObjectOfType<RiddleSafe>());
                 Riddles.Add(FindObjectOfType<RiddleRadio>());
+                Riddles.Add(FindObjectOfType<RiddleSafe>());
                 riddleEnumerator = Riddles.GetEnumerator();
                 NextRiddle();
             }

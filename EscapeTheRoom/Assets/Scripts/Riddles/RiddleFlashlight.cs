@@ -14,11 +14,13 @@ namespace VREscape
 
         private bool active = false;
         private FlashLight FlashLight;
+        private Drawer drawer;
 
         private HWManager hwManager;
 
         public void StartRiddle()
         {
+            drawer = FindObjectOfType<Drawer>();
             hwManager = FindObjectOfType<HWManager>();
             FlashLight = FindObjectOfType<FlashLight>();
             active = true;
@@ -33,6 +35,11 @@ namespace VREscape
                 RaycastHit hit;
                 LayerMask mask = LayerMask.GetMask("Letter");
 
+                if (FlashLight == null)
+                {
+                    FlashLight = FindObjectOfType<FlashLight>();
+                }
+
                 Ray ray = new Ray(FlashLight.transform.position, -FlashLight.transform.right);
 
                 if (Physics.Raycast(ray, out hit, Mathf.Infinity, mask))
@@ -45,6 +52,8 @@ namespace VREscape
 
         private IEnumerator Do()
         {
+            hwManager.SendValue(Enums.UnlockEnum.Drawer);
+            drawer.Open();
             foreach (var lightSource in FindObjectOfType<Room>().GetComponentsInChildren<Light>())
             {
                 lightSource.enabled = false;
@@ -63,6 +72,7 @@ namespace VREscape
             }
 
             FlashLight.DisableLight();
+            drawer.Close();
 
             
             Debug.Log("RiddleFlashlight solved");

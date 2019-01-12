@@ -23,7 +23,14 @@ namespace VREscape
 
         private AudioSource _instructionSource;
 
-        public Enums.ButtonEnum[] CorrectButtonOrder = new[]
+        public Enums.ButtonEnum[] FirstCorrectButtonOrder = new[]
+        {
+            Enums.ButtonEnum.Button1,
+            Enums.ButtonEnum.Button1,
+            Enums.ButtonEnum.Button2
+        };
+
+        public Enums.ButtonEnum[] SecondCorrectButtonOrder = new[]
         {
             Enums.ButtonEnum.Button3,
             Enums.ButtonEnum.Button2,
@@ -31,6 +38,8 @@ namespace VREscape
         };
 
         private int _currentButton;
+        private bool _solvedFirstButtonOrder = false;
+        private bool _allowButtons = false;
 
         public event Action<bool> OnRiddleDone;
 
@@ -56,11 +65,21 @@ namespace VREscape
         public void Update()
         {
             //Debug.Log(_radioRotary.CurrentState);
-            if (!_isActive) return;
+            if (!_isActive || _radioRotary.Frequencies.Count <= 1 || !_allowButtons) return;
+
             var pressedButton = GetPressedButton();
             if (pressedButton == null) return;
             //Debug.Log(pressedButton);
-            if (pressedButton == CorrectButtonOrder[_currentButton])
+            Enums.ButtonEnum[] correctButtonOrder;
+            if (!_solvedFirstButtonOrder)
+            {
+                correctButtonOrder = FirstCorrectButtonOrder;
+            } else
+            {
+                correctButtonOrder = SecondCorrectButtonOrder;
+            }
+
+            if (pressedButton == correctButtonOrder[_currentButton])
             {
                 _currentButton++;
                 _buttonAudioSource.clip = CorrectButton;
@@ -103,8 +122,18 @@ namespace VREscape
                 yield return new WaitForSecondsRealtime(0);
             Debug.Log("Right Frequence");
             _radioRotary.Frequencies.Add(1104, Instruction1104Clue1);
+
+            while (_radioRotary.CurrentState != 1104)
+                yield return new WaitForSecondsRealtime(0);
+            _allowButtons = true;
+
+            while (!RiddleSolved(FirstCorrectButtonOrder.Length))
+                yield return new WaitForSecondsRealtime(0);
+            _solvedFirstButtonOrder = true;
+            _currentButton = 0;
             _radioRotary.Frequencies.Add(800, Instruction0800Clue2);
-            while (!RiddleSolved())
+
+            while (!RiddleSolved(SecondCorrectButtonOrder.Length))
                 yield return new WaitForSecondsRealtime(0);
             Debug.Log("Solved Riddle");
             _radioRotary.Frequencies.Clear();
@@ -112,9 +141,9 @@ namespace VREscape
             OnRiddleDone?.Invoke(true);
         }
 
-        private bool RiddleSolved()
+        private bool RiddleSolved(int correctButtonLength)
         {
-            return _currentButton >= CorrectButtonOrder.Length;
+            return _currentButton >= correctButtonLength;
         }
     }
 }

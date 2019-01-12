@@ -56,15 +56,6 @@ public class Drawer : MonoBehaviour
     // Update is called once per frame
     void Update()
     {
-        if (_hwManager.GetButtonState(Enums.ButtonEnum.Button1))
-        {
-            Open();
-        }
-        else if (_hwManager.GetButtonState(Enums.ButtonEnum.Button2))
-        {
-            Close();
-        }
-
         if (!opening && !closing) return;
 
         var distCovered = (Time.time - _startTime) * Speed;

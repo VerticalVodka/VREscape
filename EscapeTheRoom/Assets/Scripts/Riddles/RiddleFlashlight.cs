@@ -12,7 +12,7 @@ namespace VREscape
     {
         public event Action<bool> OnRiddleDone;
 
-        public bool active = false;
+        private bool active = false;
         private FlashLight FlashLight;
 
         private HWManager hwManager;

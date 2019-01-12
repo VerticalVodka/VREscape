@@ -1,6 +1,7 @@
 ﻿using System;
 using System.Collections;
 using System.Collections.Generic;
+using System.Linq;
 using System.Threading.Tasks;
 using UnityEngine;
 
@@ -8,7 +9,8 @@ namespace VREscape
 {
     public class GameManager : MonoBehaviour
     {
-        public List<IRiddle> Riddles = new List<IRiddle>();
+        private List<IRiddle> Riddles = new List<IRiddle>();
+        public List<GameObject> ObjectsWithRiddles = new List<GameObject>();
         private IEnumerator<IRiddle> riddleEnumerator;
 
         public int PauseBetweenRiddlesInMs = 1000;
@@ -41,10 +43,11 @@ namespace VREscape
         {
             try
             {
-                Riddles.Add(FindObjectOfType<SimonSaysRiddle>());
-                Riddles.Add(FindObjectOfType<RiddleRadio>());
-                Riddles.Add(FindObjectOfType<RiddleFlashlight>());
-                Riddles.Add(FindObjectOfType<RiddleSafe>());
+                var Riddles = ObjectsWithRiddles
+                                .Select(go => go.GetComponent(typeof(IRiddle)))
+                                .Select(r => r as IRiddle)
+                                .Where(r => r != null)
+                                .ToList();
                 riddleEnumerator = Riddles.GetEnumerator();
                 NextRiddle();
             }

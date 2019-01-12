@@ -4,7 +4,6 @@ using UnityEngine;
 
 namespace VREscape
 {
-    [RequireComponent(typeof(Renderer))]
     public class Rotary : MonoBehaviour
     {
         protected AudioSource _audioSource;
@@ -21,7 +20,7 @@ namespace VREscape
         public int StartValue;
         public int CurrentState;
 
-        public virtual void Start()
+        public void Start()
         {
             _hwManager = FindObjectOfType<HWManager>();
             _audioSource = GetComponent<AudioSource>();

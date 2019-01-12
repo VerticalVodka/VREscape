@@ -5,7 +5,7 @@ namespace VREscape
     {
         public int LastState;
 
-        public override void Start()
+        public void Start()
         {
             flips = true;
             base.Start();

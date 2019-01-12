@@ -12,8 +12,9 @@ namespace VREscape
     {
         /// <summary>
         /// Amount of sounds in a row for one level
+        /// Currently fixed to 1
         /// </summary>
-        public int sequenceSize = 1;
+        private int sequenceSize = 1;
         /// <summary>
         /// The amount of successes the users have to have in a row to win the game.
         /// If it is smaller 0, this riddle can't be won through this
@@ -59,6 +60,7 @@ namespace VREscape
 
         private HWManager hwManager;
 
+        private bool gameRunning = false;
         private bool isPlayingSounds = false;
         private int successesInSequence = 0;
         private int successesTotal = 0;
@@ -147,6 +149,7 @@ namespace VREscape
 
         public void StartRiddle()
         {
+            gameRunning = true;
             lastCorrectButton = null;
             LoadNewLevel();
         }
@@ -174,6 +177,7 @@ namespace VREscape
 
         private void WinGame(bool success)
         {
+            gameRunning = false;
             OnRiddleDone?.Invoke(success);
         }
 
@@ -213,7 +217,6 @@ namespace VREscape
         {
             hwManager = FindObjectOfType<HWManager>();
             buttons = buttonList.ToDictionary(kvp => kvp.button, kvp => kvp.gameObject);
-            StartRiddle(); // TODO: Remove
         }
 
         private Nullable<Enums.ButtonEnum> lastCorrectButton;
@@ -223,6 +226,8 @@ namespace VREscape
 
         public void Update()
         {
+            if (!gameRunning)
+                return;
             if (shouldAudioPlay && isAudioReady)
             {
                 ++sequenceAudioIndex;

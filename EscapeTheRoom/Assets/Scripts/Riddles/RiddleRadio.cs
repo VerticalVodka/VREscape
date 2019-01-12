@@ -82,9 +82,9 @@ namespace VREscape
             if (pressedButton == correctButtonOrder[_currentButton])
             {
                 _currentButton++;
-                if (_currentButton >= CorrectButtonOrder.Length)
+                if (_currentButton >= correctButtonOrder.Length)
                 {
-                    _currentButton = CorrectButtonOrder.Length - 1;
+                    _currentButton = correctButtonOrder.Length - 1;
                 }
                 _buttonAudioSource.clip = CorrectButton;
                 _buttonAudioSource.Play();

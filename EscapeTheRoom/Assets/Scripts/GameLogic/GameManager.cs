@@ -34,7 +34,6 @@ namespace VREscape
         void OnRiddleDoneListener(bool value)
         {
             riddleEnumerator.Current.OnRiddleDone -= OnRiddleDoneListener;
-
             NextRiddle();
         }
 

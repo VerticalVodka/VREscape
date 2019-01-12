@@ -52,9 +52,15 @@ namespace VREscape
         public int audioWaitAfterClip;
 
         /// <summary>
-        /// Audiosource which will be playing the sounds
+        /// Audiosource which will be playing the animals' sounds
         /// </summary>
-        public AudioSource audioSource;
+        public AudioSource animalAudioSource;
+        /// <summary>
+        /// Audio source which will be playing the correct and incorrect button sounds
+        /// </summary>
+        public AudioSource FeedbackAudioSource;
+        public AudioClip CorrectButtonAudioClip;
+        public AudioClip WrongButtonAudioClip;
 
         public event Action<bool> OnRiddleDone;
 
@@ -136,7 +142,7 @@ namespace VREscape
         private void StopPlayingSequenceSound()
         {
             shouldAudioPlay = false;
-            audioSource.Stop();
+            animalAudioSource.Stop();
         }
 
         private void StopShowingImagesAboveButtons()
@@ -246,7 +252,7 @@ namespace VREscape
                 else
                 {
                     AudioClip clip = buttonAnimalMap[currentSequence[sequenceAudioIndex]].GetComponent<AudioSource>().clip;
-                    audioSource.PlayOneShot(clip);
+                    animalAudioSource.PlayOneShot(clip);
                     isAudioReady = false;
                     int waitTime = audioWaitAfterClip + (int)(clip.length * 1000);
                     Task waitForClipFinished = new Task(async () =>
@@ -265,6 +271,8 @@ namespace VREscape
             {
                 if (hwManager.GetButtonState(currentSequence[sequencePressedIndex]))
                 {
+                    // Right button
+                    PlayCorrectButtonSound();
                     lastCorrectButton = currentSequence[sequencePressedIndex];
                     ++sequencePressedIndex;
                 }
@@ -280,11 +288,35 @@ namespace VREscape
                     if (btnKvp.Key != currentSequence[sequencePressedIndex]
                       && hwManager.GetButtonState(btnKvp.Key))
                     {
+                        // Wrong button
+                        PlayWrongButtonSound();
                         ResetLevel();
                         return;
                     }
                 }
             }
+        }
+
+        private void PlayWrongButtonSound()
+        {
+            FeedbackAudioSource.PlayOneShot(WrongButtonAudioClip);
+            int waitLength = (int)(WrongButtonAudioClip.length * 1000) + 1;
+            Task waitForClipFinished = new Task(async () =>
+            {
+                await Task.Delay(waitLength);
+            });
+            waitForClipFinished.Start();
+        }
+
+        private void PlayCorrectButtonSound()
+        {
+            FeedbackAudioSource.PlayOneShot(CorrectButtonAudioClip);
+            int waitLength = (int)(CorrectButtonAudioClip.length * 1000) + 1;
+            Task waitForClipFinished = new Task(async () =>
+            {
+                await Task.Delay(waitLength);
+            });
+            waitForClipFinished.Start();
         }
     }
 }

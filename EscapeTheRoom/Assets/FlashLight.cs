@@ -12,10 +12,10 @@ public class FlashLight : MonoBehaviour
 	
 	void Start ()
 	{
-		parent = this.parent;
-		controller = parent.GetComponentInChildren<SteamVR_TrackedObject>();
 		light = GetComponentInChildren<Light>();
 		light.enabled = false;
+		parent = this.parent;
+		controller = parent.GetComponentInChildren<SteamVR_TrackedObject>();
 	}
 	
 	void Update () {

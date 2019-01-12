@@ -13,6 +13,7 @@ namespace VREscape
         public event Action<bool> OnRiddleDone;
 
         private bool active = false;
+        private bool buttonPressed = false;
         private FlashLight FlashLight;
         private Drawer drawer;
 
@@ -47,6 +48,11 @@ namespace VREscape
                     var mr = hit.transform.gameObject.GetComponent<MeshRenderer>();
                     mr.enabled = true;
                 }
+
+                if (hwManager.GetButtonState(Enums.ButtonEnum.Button5))
+                {
+                    buttonPressed = true;
+                }
             }
         }
 
@@ -59,9 +65,9 @@ namespace VREscape
                 lightSource.enabled = false;
             }
 
-           FlashLight.EnableLight();
+            FlashLight.EnableLight();
 
-            while (!hwManager.GetButtonState(Enums.ButtonEnum.Button5))
+            while (!buttonPressed)
             {
                 yield return new WaitForSecondsRealtime(0);
             }
@@ -74,7 +80,7 @@ namespace VREscape
             FlashLight.DisableLight();
             drawer.Close();
 
-            
+
             Debug.Log("RiddleFlashlight solved");
             OnRiddleDone?.Invoke(true);
             active = false;

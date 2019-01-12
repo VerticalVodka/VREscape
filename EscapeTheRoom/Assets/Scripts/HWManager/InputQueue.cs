@@ -110,6 +110,7 @@ namespace SerialTest
             buttons.Add(Enums.ButtonEnum.Button2, false);
             buttons.Add(Enums.ButtonEnum.Button3, false);
             buttons.Add(Enums.ButtonEnum.Button4, false);
+            buttons.Add(Enums.ButtonEnum.Button5, false);
             buttons.Add(Enums.ButtonEnum.Rotary1, false);
             buttons.Add(Enums.ButtonEnum.Rotary2, false);
         }

@@ -394,6 +394,7 @@ MonoBehaviour:
   MaxValue: 5
   StartValue: 0
   CurrentState: 0
+  LastState: 0
 --- !u!136 &1609252683
 CapsuleCollider:
   m_ObjectHideFlags: 0
@@ -568,6 +569,7 @@ GameObject:
   - component: {fileID: 1833770719}
   - component: {fileID: 1833770718}
   - component: {fileID: 1833770717}
+  - component: {fileID: 1833770716}
   - component: {fileID: 1833770721}
   m_Layer: 0
   m_Name: Cube
@@ -576,6 +578,20 @@ GameObject:
   m_NavMeshLayer: 0
   m_StaticEditorFlags: 0
   m_IsActive: 1
+--- !u!114 &1833770716
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInternal: {fileID: 0}
+  m_GameObject: {fileID: 1833770715}
+  m_Enabled: 0
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: c485f961f671a8d418b7b845bce70992, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  SafeRotary: {fileID: 1609252682}
+  CombinationDigitMatchesSound: {fileID: 0}
+  CombinationLength: 5
 --- !u!65 &1833770717
 BoxCollider:
   m_ObjectHideFlags: 0

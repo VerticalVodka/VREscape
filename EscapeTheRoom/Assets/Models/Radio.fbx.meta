@@ -3,30 +3,35 @@ guid: e2f0616f5b061a04488b0616e9d587c2
 ModelImporter:
   serializedVersion: 23
   fileIDToRecycleName:
-    100000: //RootNode
-    100002: Radio_Antena
-    100004: Radio_Body
-    100006: Radio_FreqController
-    100008: Radio_OnOffController
-    100010: Radio_Point
-    100012: Radio_Speaker
-    100014: Radio_SpeakerLightRing
-    400000: //RootNode
-    400002: Radio_Antena
-    400004: Radio_Body
-    400006: Radio_FreqController
-    400008: Radio_OnOffController
-    400010: Radio_Point
-    400012: Radio_Speaker
-    400014: Radio_SpeakerLightRing
-    2100000: Shape.010
-    2100002: Shape.007
-    2100004: Shape.006
-    2100006: Shape.005
-    2100008: Shape.004
-    2100010: Shape.003
-    2100012: Shape.001
-    2100014: Shape
+    100000: Camera
+    100002: Lamp
+    100004: //RootNode
+    100006: Radio_Antena
+    100008: Radio_Body
+    100010: Radio_FreqController
+    100012: Radio_OnOffController
+    100014: Radio_Point
+    100016: Radio_Speaker
+    100018: Radio_SpeakerLightRing
+    400000: Camera
+    400002: Lamp
+    400004: //RootNode
+    400006: Radio_Antena
+    400008: Radio_Body
+    400010: Radio_FreqController
+    400012: Radio_OnOffController
+    400014: Radio_Point
+    400016: Radio_Speaker
+    400018: Radio_SpeakerLightRing
+    2000000: Camera
+    2100000: Shape
+    2100002: Shape.001
+    2100004: Shape.003
+    2100006: Shape.004
+    2100008: Shape.006
+    2100010: Shape.005
+    2100012: Shape.007
+    2100014: Shape.010
     2300000: Radio_Antena
     2300002: Radio_Body
     2300004: Radio_FreqController
@@ -41,13 +46,14 @@ ModelImporter:
     3300008: Radio_Point
     3300010: Radio_Speaker
     3300012: Radio_SpeakerLightRing
-    4300000: Radio_FreqController
-    4300002: Radio_Point
-    4300004: Radio_Antena
+    4300000: Radio_SpeakerLightRing
+    4300002: Radio_Speaker
+    4300004: Radio_Body
     4300006: Radio_OnOffController
-    4300008: Radio_Body
-    4300010: Radio_Speaker
-    4300012: Radio_SpeakerLightRing
+    4300008: Radio_Antena
+    4300010: Radio_Point
+    4300012: Radio_FreqController
+    10800000: Lamp
   externalObjects: {}
   materials:
     importMaterials: 1

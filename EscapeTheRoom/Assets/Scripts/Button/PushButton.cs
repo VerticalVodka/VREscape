@@ -21,7 +21,6 @@ namespace VREscape
         protected override void ButtonDown()
         {
             bumper.Translate(bumper.transform.up * -Scale);
-            //HwManager.SendValue(Enums.UnlockEnum.Safe);
             base.ButtonDown();
         }
 

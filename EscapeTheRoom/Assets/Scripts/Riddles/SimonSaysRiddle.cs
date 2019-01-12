@@ -59,6 +59,7 @@ namespace VREscape
 
         private HWManager hwManager;
 
+        private bool gameFinished = false;
         private bool isPlayingSounds = false;
         private int successesInSequence = 0;
         private int successesTotal = 0;
@@ -147,6 +148,7 @@ namespace VREscape
 
         public void StartRiddle()
         {
+            gameFinished = false;
             lastCorrectButton = null;
             LoadNewLevel();
         }
@@ -174,6 +176,7 @@ namespace VREscape
 
         private void WinGame(bool success)
         {
+            gameFinished = true;
             OnRiddleDone?.Invoke(success);
         }
 
@@ -213,7 +216,6 @@ namespace VREscape
         {
             hwManager = FindObjectOfType<HWManager>();
             buttons = buttonList.ToDictionary(kvp => kvp.button, kvp => kvp.gameObject);
-            StartRiddle(); // TODO: Remove
         }
 
         private Nullable<Enums.ButtonEnum> lastCorrectButton;
@@ -223,6 +225,8 @@ namespace VREscape
 
         public void Update()
         {
+            if (gameFinished)
+                return;
             if (shouldAudioPlay && isAudioReady)
             {
                 ++sequenceAudioIndex;

@@ -23,7 +23,7 @@ GameObject:
   - component: {fileID: 23290820574972234}
   - component: {fileID: 82827072242592624}
   m_Layer: 0
-  m_Name: Horse_Temp
+  m_Name: Horse_Prefab
   m_TagString: Untagged
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0

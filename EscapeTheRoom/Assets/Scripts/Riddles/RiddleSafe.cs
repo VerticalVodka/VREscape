@@ -2,6 +2,7 @@
 using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
+using System.Linq;
 
 namespace VREscape
 {
@@ -9,6 +10,7 @@ namespace VREscape
     {
         public enum Directions { ClockWise, CounterClockWise };
         public event Action<bool> OnRiddleDone;
+        public GameObject InitiallyHiddenStuff;
         public SafeRotary SafeRotary;
         public AudioClip CombinationDigitMatchesSound;
         public AudioClip FailSound;
@@ -30,11 +32,13 @@ namespace VREscape
             _combinationProgress = 0;
             _combinationLength = Planes.Count;
             _audioSource = GetComponent<AudioSource>();
+            InitiallyHiddenStuff.GetComponentsInChildren<MeshRenderer>().ToList().ForEach(s => s.GetComponent<MeshRenderer>().enabled = false);
             if (AutoStartRiddle) StartRiddle();
         }
 
         public void StartRiddle()
         {
+            InitiallyHiddenStuff.GetComponentsInChildren<MeshRenderer>().ToList().ForEach(s => s.GetComponent<MeshRenderer>().enabled = true);
             System.Random rand = new System.Random();
 
             for (int i = 0; i < _combinationLength; ++i)

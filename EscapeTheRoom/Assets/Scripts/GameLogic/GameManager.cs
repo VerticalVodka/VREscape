@@ -1,6 +1,7 @@
 ﻿using System;
 using System.Collections;
 using System.Collections.Generic;
+using System.Threading.Tasks;
 using UnityEngine;
 
 namespace VREscape
@@ -10,12 +11,21 @@ namespace VREscape
         public List<IRiddle> Riddles = new List<IRiddle>();
         private IEnumerator<IRiddle> riddleEnumerator;
 
+        public int PauseBetweenRiddlesInMs = 1000;
+
+        private bool goToNextRiddle = false;
+
         private void NextRiddle()
         {
             if (riddleEnumerator.MoveNext())
             {
-                riddleEnumerator.Current.OnRiddleDone += OnRiddleDoneListener;
-                riddleEnumerator.Current.StartRiddle();
+                Task waitBeforeNextRiddle = new Task(async () =>
+                {
+                    if (PauseBetweenRiddlesInMs > 0)
+                        await Task.Delay(PauseBetweenRiddlesInMs);
+                    goToNextRiddle = true;
+                });
+                waitBeforeNextRiddle.Start();
             }
         }
 
@@ -37,7 +47,7 @@ namespace VREscape
                 riddleEnumerator = Riddles.GetEnumerator();
                 NextRiddle();
             }
-            catch (Exception e)
+            catch (Exception)
             {
                 Debug.Log("GameManager Failed");
             }
@@ -46,7 +56,13 @@ namespace VREscape
         // Update is called once per frame
         void Update()
         {
-
+            if (goToNextRiddle)
+            {
+                Debug.Log("Starting the next riddle of type " + riddleEnumerator.Current.GetType().ToString());
+                goToNextRiddle = false;
+                riddleEnumerator.Current.OnRiddleDone += OnRiddleDoneListener;
+                riddleEnumerator.Current.StartRiddle();
+            }
         }
     }
 

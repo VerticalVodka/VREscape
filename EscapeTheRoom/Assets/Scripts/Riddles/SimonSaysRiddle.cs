@@ -12,8 +12,9 @@ namespace VREscape
     {
         /// <summary>
         /// Amount of sounds in a row for one level
+        /// Currently fixed to 1
         /// </summary>
-        public int sequenceSize = 1;
+        private int sequenceSize = 1;
         /// <summary>
         /// The amount of successes the users have to have in a row to win the game.
         /// If it is smaller 0, this riddle can't be won through this
@@ -59,7 +60,7 @@ namespace VREscape
 
         private HWManager hwManager;
 
-        private bool gameFinished = false;
+        private bool gameRunning = false;
         private bool isPlayingSounds = false;
         private int successesInSequence = 0;
         private int successesTotal = 0;
@@ -148,7 +149,7 @@ namespace VREscape
 
         public void StartRiddle()
         {
-            gameFinished = false;
+            gameRunning = true;
             lastCorrectButton = null;
             LoadNewLevel();
         }
@@ -176,7 +177,7 @@ namespace VREscape
 
         private void WinGame(bool success)
         {
-            gameFinished = true;
+            gameRunning = false;
             OnRiddleDone?.Invoke(success);
         }
 
@@ -225,7 +226,7 @@ namespace VREscape
 
         public void Update()
         {
-            if (gameFinished)
+            if (!gameRunning)
                 return;
             if (shouldAudioPlay && isAudioReady)
             {

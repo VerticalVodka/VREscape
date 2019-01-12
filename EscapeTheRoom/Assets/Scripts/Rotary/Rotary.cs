@@ -45,16 +45,10 @@ namespace VREscape
                 if (flips && CurrentState > MaxValue)
                 {
                     CurrentState = MinValue + (CurrentState - MaxValue - 1);
-                    Debug.Log(MinValue);
-                    Debug.Log(MaxValue);
-                    Debug.Log(CurrentState);
                 }
                 else if (flips && CurrentState < MinValue)
                 {
                     CurrentState = MaxValue - (CurrentState - MinValue + 1);
-                    Debug.Log(MinValue);
-                    Debug.Log(MaxValue);
-                    Debug.Log(CurrentState);
                 }
                 else if (!flips && CurrentState > MaxValue)
                 {

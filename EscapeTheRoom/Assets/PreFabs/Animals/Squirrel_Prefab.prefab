@@ -23,7 +23,7 @@ GameObject:
   - component: {fileID: 23290820574972234}
   - component: {fileID: 82827072242592624}
   m_Layer: 0
-  m_Name: Horse_Prefab
+  m_Name: Squirrel_Prefab
   m_TagString: Untagged
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
@@ -48,7 +48,7 @@ MeshRenderer:
   m_CorrespondingSourceObject: {fileID: 0}
   m_PrefabInternal: {fileID: 100100000}
   m_GameObject: {fileID: 1748801024389598}
-  m_Enabled: 0
+  m_Enabled: 1
   m_CastShadows: 1
   m_ReceiveShadows: 1
   m_DynamicOccludee: 1
@@ -57,7 +57,7 @@ MeshRenderer:
   m_ReflectionProbeUsage: 1
   m_RenderingLayerMask: 4294967295
   m_Materials:
-  - {fileID: 2100000, guid: e6e1cfda9da873543902f81cdf9c4f27, type: 2}
+  - {fileID: 2100000, guid: f5e89259e6af30643aba97303aa327f7, type: 2}
   m_StaticBatchInfo:
     firstSubMesh: 0
     subMeshCount: 0
@@ -93,7 +93,7 @@ AudioSource:
   m_Enabled: 1
   serializedVersion: 4
   OutputAudioMixerGroup: {fileID: 0}
-  m_audioClip: {fileID: 8300000, guid: bb05f6ad1dff90949b969bebc43e5a91, type: 3}
+  m_audioClip: {fileID: 8300000, guid: e213a66619af11a4587b0b9cbfe3b51d, type: 3}
   m_PlayOnAwake: 1
   m_Volume: 1
   m_Pitch: 1

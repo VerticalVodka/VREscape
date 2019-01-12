@@ -692,7 +692,7 @@ PlayerSettings:
   cloudServicesEnabled:
     Analytics: 0
     Build: 0
-    Collab: 0
+    Collab: 1
     ErrorHub: 0
     Game_Performance: 0
     Hub: 0
@@ -701,9 +701,9 @@ PlayerSettings:
     Unity_Ads: 0
   facebookSdkVersion: 7.9.4
   apiCompatibilityLevel: 3
-  cloudProjectId: 
-  projectName: 
-  organizationId: 
+  cloudProjectId: 5ca96bfa-0d4c-488c-91a1-6f973645b8df
+  projectName: EscapeTheRoom
+  organizationId: butterless_toast
   cloudEnabled: 0
   enableNativePlatformBackendsForNewInputSystem: 0
   disableOldInputManagerSupport: 0

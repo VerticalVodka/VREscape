@@ -11,12 +11,7 @@ namespace VREscape
         private bool _channelIsPlaying = false;
         public AudioSource BackGroundAudioSource;
 
-        public void Start()
-        {
-            base.Start();
-        }
-
-        public void Update()
+        public override void Update()
         {
             base.Update();
             if (!IsRadioOn)

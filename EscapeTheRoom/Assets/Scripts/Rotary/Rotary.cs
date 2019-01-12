@@ -20,7 +20,7 @@ namespace VREscape
         public int StartValue;
         public int CurrentState;
 
-        public void Start()
+        public virtual void Start()
         {
             _hwManager = FindObjectOfType<HWManager>();
             _audioSource = GetComponent<AudioSource>();

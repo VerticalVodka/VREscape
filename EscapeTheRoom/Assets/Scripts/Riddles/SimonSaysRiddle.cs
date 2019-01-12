@@ -11,11 +11,6 @@ namespace VREscape
     public class SimonSaysRiddle : MonoBehaviour, IRiddle
     {
         /// <summary>
-        /// Amount of sounds in a row for one level
-        /// Currently fixed to 1
-        /// </summary>
-        private int sequenceSize = 1;
-        /// <summary>
         /// The amount of successes the users have to have in a row to win the game.
         /// If it is smaller 0, this riddle can't be won through this
         /// </summary>
@@ -49,12 +44,17 @@ namespace VREscape
         /// The amount of milliseconds to wait before playing all audio-clips again after finishing them
         /// </summary>
         public int audioWaitBetweenSequences;
-        public int audioWaitAfterClip;
 
         /// <summary>
-        /// Audiosource which will be playing the sounds
+        /// Audiosource which will be playing the animals' sounds
         /// </summary>
-        public AudioSource audioSource;
+        public AudioSource animalAudioSource;
+        /// <summary>
+        /// Audio source which will be playing the correct and incorrect button sounds
+        /// </summary>
+        public AudioSource FeedbackAudioSource;
+        public AudioClip CorrectButtonAudioClip;
+        public AudioClip WrongButtonAudioClip;
 
         public event Action<bool> OnRiddleDone;
 
@@ -66,7 +66,9 @@ namespace VREscape
         private int successesTotal = 0;
 
         private Dictionary<Enums.ButtonEnum, GameObject> buttonAnimalMap;
-        private List<Enums.ButtonEnum> currentSequence;
+        private Enums.ButtonEnum correctButton;
+        private Dictionary<Enums.ButtonEnum, bool> buttonStates;
+
 
         private void RandomizeButtons()
         {
@@ -97,23 +99,10 @@ namespace VREscape
                 throw new InvalidOperationException("You need at least one Button to play the SimonSays riddle. Add one to SimonSaysRiddle.buttons.");
 
             var random = new System.Random();
-            currentSequence = new List<Enums.ButtonEnum>();
-            for (int i = 0; i < sequenceSize; ++i)
-            {
-                currentSequence.Add(buttons.Keys.ElementAt(random.Next(0, buttons.Count - 1)));
-            }
+            correctButton = buttons.Keys.ElementAt(random.Next(0, buttons.Count));
             sequencePressedIndex = 0;
 
-            if (Debug.isDebugBuild)
-            {
-                var sb = new StringBuilder();
-                foreach (var seq in currentSequence)
-                {
-                    sb.Append(seq);
-                    sb.Append(">");
-                }
-                Debug.Log("Current Sequence: " + sb.ToString());
-            }
+            Debug.Log("Correct button is " + correctButton);
         }
 
         private void ShowImagesAboveButtons()
@@ -136,7 +125,7 @@ namespace VREscape
         private void StopPlayingSequenceSound()
         {
             shouldAudioPlay = false;
-            audioSource.Stop();
+            animalAudioSource.Stop();
         }
 
         private void StopShowingImagesAboveButtons()
@@ -213,10 +202,16 @@ namespace VREscape
         }
 
         private int sequencePressedIndex;
+
         public void Start()
         {
             hwManager = FindObjectOfType<HWManager>();
             buttons = buttonList.ToDictionary(kvp => kvp.button, kvp => kvp.gameObject);
+
+            buttonStates = new Dictionary<Enums.ButtonEnum, bool>();
+            foreach(var en in buttons.Keys) {
+                buttonStates.Add(en, hwManager.GetButtonState(en));
+            }
         }
 
         private Nullable<Enums.ButtonEnum> lastCorrectButton;
@@ -230,61 +225,80 @@ namespace VREscape
                 return;
             if (shouldAudioPlay && isAudioReady)
             {
-                ++sequenceAudioIndex;
-                if (sequenceAudioIndex >= currentSequence.Count)
+                var clip = buttonAnimalMap[correctButton].GetComponent<AudioSource>().clip;
+                animalAudioSource.PlayOneShot(clip);
+
+                isAudioReady = false;
+                int waitTime = audioWaitBetweenSequences + (int)(clip.length * 1000);
+                Task waitForClipFinished = new Task(async () =>
                 {
-                    sequenceAudioIndex = -1;
-                    isAudioReady = false;
-                    Task waitBeforeSequence = new Task(async () =>
-                    {
-                        if (audioWaitBetweenSequences - audioWaitAfterClip > 0)
-                            await Task.Delay(audioWaitBetweenSequences - audioWaitAfterClip);
-                        isAudioReady = true;
-                    });
-                    waitBeforeSequence.Start();
-                }
-                else
-                {
-                    AudioClip clip = buttonAnimalMap[currentSequence[sequenceAudioIndex]].GetComponent<AudioSource>().clip;
-                    audioSource.PlayOneShot(clip);
-                    isAudioReady = false;
-                    int waitTime = audioWaitAfterClip + (int)(clip.length * 1000);
-                    Task waitForClipFinished = new Task(async () =>
-                    {
-                        await Task.Delay(waitTime);
-                        isAudioReady = true;
-                    });
-                    waitForClipFinished.Start();
-                }
+                    await Task.Delay(waitTime);
+                    isAudioReady = true;
+                });
+                waitForClipFinished.Start();
             }
 
-            if (lastCorrectButton.HasValue && !hwManager.GetButtonState(lastCorrectButton.Value))
-                lastCorrectButton = null;
-
-            if (!lastCorrectButton.HasValue)
+            if (AnyWrongButtonGotPressed())
             {
-                if (hwManager.GetButtonState(currentSequence[sequencePressedIndex]))
-                {
-                    lastCorrectButton = currentSequence[sequencePressedIndex];
-                    ++sequencePressedIndex;
-                }
+                PlayWrongButtonSound();
+                ResetLevel();
+                return;
+            }
 
-                if (sequencePressedIndex >= currentSequence.Count)
-                {
-                    WinLevel();
-                    return;
-                }
+            if (CorrectButtonGotPressed())
+            {
+                PlayCorrectButtonSound();
+                WinLevel();
+                return;
+            }
+        }
 
-                foreach (var btnKvp in buttons)
+        private bool AnyWrongButtonGotPressed()
+        {
+            bool wrongBtnGotPressed = false;
+            foreach(var en in buttons.Keys)
+            {
+                if (en != correctButton
+                    && hwManager.GetButtonState(en) != buttonStates[en])
                 {
-                    if (btnKvp.Key != currentSequence[sequencePressedIndex]
-                      && hwManager.GetButtonState(btnKvp.Key))
-                    {
-                        ResetLevel();
-                        return;
-                    }
+                    buttonStates[en] = hwManager.GetButtonState(en);
+                    if (buttonStates[en])
+                        wrongBtnGotPressed = true;
                 }
             }
+            return wrongBtnGotPressed;
+        }
+
+        private bool CorrectButtonGotPressed()
+        {
+            if (hwManager.GetButtonState(correctButton) != buttonStates[correctButton])
+            {
+                buttonStates[correctButton] = hwManager.GetButtonState(correctButton);
+                return buttonStates[correctButton];
+            }
+            return false;
+        }
+
+        private void PlayWrongButtonSound()
+        {
+            FeedbackAudioSource.PlayOneShot(WrongButtonAudioClip);
+            int waitLength = (int)(WrongButtonAudioClip.length * 1000) + 1;
+            Task waitForClipFinished = new Task(async () =>
+            {
+                await Task.Delay(waitLength);
+            });
+            waitForClipFinished.Start();
+        }
+
+        private void PlayCorrectButtonSound()
+        {
+            FeedbackAudioSource.PlayOneShot(CorrectButtonAudioClip);
+            int waitLength = (int)(CorrectButtonAudioClip.length * 1000) + 1;
+            Task waitForClipFinished = new Task(async () =>
+            {
+                await Task.Delay(waitLength);
+            });
+            waitForClipFinished.Start();
         }
     }
 }

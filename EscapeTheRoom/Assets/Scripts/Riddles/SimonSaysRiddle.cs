@@ -119,12 +119,18 @@ namespace VREscape
       foreach (var bamkvp in buttonAnimalMap)
       {
         // TODO: Add Shader
+
+        buttons[bamkvp.Key].GetComponent<MeshRenderer>().material =
+          bamkvp.Value.GetComponent<Material>();
+
+        /*
         Debug.Log("---");
         Debug.Log(bamkvp.Value);
         Debug.Log(bamkvp.Value.GetComponent<Material>());
         var renderer = buttons[bamkvp.Key].GetComponent<MeshRenderer>();
         renderer.enabled = true;
         renderer.material.shader..CopyPropertiesFromMaterial(bamkvp.Value.GetComponent<Material>());
+        */
       }
     }
 

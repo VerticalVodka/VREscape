@@ -1580,7 +1580,6 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: e8f92fa375de67b45b8a1b298cebb64d, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  sequenceSize: 1
   successesInSequenceForWin: 5
   successesTotalForWin: 10
   buttonList:
@@ -2900,6 +2899,11 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 81c19886131b07d448a7a2f7d52cc6d5, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
+  ObjectsWithRiddles:
+  - {fileID: 800443750}
+  - {fileID: 1325616994}
+  - {fileID: 344156590}
+  PauseBetweenRiddlesInMs: 1000
 --- !u!4 &1291617827
 Transform:
   m_ObjectHideFlags: 0

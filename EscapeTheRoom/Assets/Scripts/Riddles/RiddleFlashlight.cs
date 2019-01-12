@@ -20,7 +20,6 @@ namespace VREscape
 
         private IEnumerator Do()
         {
-            // TODO: LOGIC
             yield return new WaitForSecondsRealtime(0);
 
             Debug.Log("RiddleFlashlight solved");

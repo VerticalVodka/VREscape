@@ -32,13 +32,15 @@ namespace VREscape
             _combinationProgress = 0;
             _combinationLength = Planes.Count;
             _audioSource = GetComponent<AudioSource>();
-            InitiallyHiddenStuff.GetComponentsInChildren<MeshRenderer>().ToList().ForEach(s => s.GetComponent<MeshRenderer>().enabled = false);
+            //InitiallyHiddenStuff.GetComponentsInChildren<MeshRenderer>().ToList().ForEach(s => s.GetComponent<MeshRenderer>().enabled = false);
+            InitiallyHiddenStuff.SetActive(false);
             if (AutoStartRiddle) StartRiddle();
         }
 
         public void StartRiddle()
         {
-            InitiallyHiddenStuff.GetComponentsInChildren<MeshRenderer>().ToList().ForEach(s => s.GetComponent<MeshRenderer>().enabled = true);
+            //InitiallyHiddenStuff.GetComponentsInChildren<MeshRenderer>().ToList().ForEach(s => s.GetComponent<MeshRenderer>().enabled = true);
+            InitiallyHiddenStuff.SetActive(true);
             System.Random rand = new System.Random();
 
             for (int i = 0; i < _combinationLength; ++i)

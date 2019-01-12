@@ -26,7 +26,6 @@ namespace VREscape
             _audioSource = GetComponent<AudioSource>();
             _renderer = GetComponent<Renderer>();
             CurrentState = StartValue;
-            _audioSource.clip = RotaryTurnSound;
         }
 
         protected virtual void RotaryTurned()

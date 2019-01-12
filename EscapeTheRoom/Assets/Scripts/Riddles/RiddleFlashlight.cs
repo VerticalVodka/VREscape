@@ -15,8 +15,11 @@ namespace VREscape
         public bool active = false;
         private FlashLight FlashLight;
 
+        private HWManager hwManager;
+
         public void StartRiddle()
         {
+            hwManager = FindObjectOfType<HWManager>();
             FlashLight = FindObjectOfType<FlashLight>();
             active = true;
             Debug.Log("RiddleFlashlight started");
@@ -42,18 +45,26 @@ namespace VREscape
 
         private IEnumerator Do()
         {
-            foreach (var light in FindObjectOfType<Room>().GetComponentsInChildren<Light>())
+            foreach (var lightSource in FindObjectOfType<Room>().GetComponentsInChildren<Light>())
             {
-                light.enabled = false;
+                lightSource.enabled = false;
             }
 
            FlashLight.EnableLight();
 
-            while (true)
+            while (!hwManager.GetButtonState(Enums.ButtonEnum.Button5))
             {
                 yield return new WaitForSecondsRealtime(0);
             }
 
+            foreach (var lightSource in FindObjectOfType<Room>().GetComponentsInChildren<Light>())
+            {
+                lightSource.enabled = true;
+            }
+
+            FlashLight.DisableLight();
+
+            
             Debug.Log("RiddleFlashlight solved");
             OnRiddleDone?.Invoke(true);
             active = false;

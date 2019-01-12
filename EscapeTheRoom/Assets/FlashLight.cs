@@ -6,14 +6,12 @@ public class FlashLight : MonoBehaviour
 {
 	private Light light;
 	
-	// Use this for initialization
 	void Start ()
 	{
 		light = GetComponentInChildren<Light>();
 		light.enabled = false;
 	}
 	
-	// Update is called once per frame
 	void Update () {
 		
 	}
@@ -21,5 +19,10 @@ public class FlashLight : MonoBehaviour
 	public void EnableLight()
 	{
 		light.enabled = true;
+	}
+
+	public void DisableLight()
+	{
+		light.enabled = false;
 	}
 }

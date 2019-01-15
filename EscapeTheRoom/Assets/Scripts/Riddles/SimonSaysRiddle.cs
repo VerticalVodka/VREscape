@@ -282,23 +282,11 @@ namespace VREscape
         private void PlayWrongButtonSound()
         {
             FeedbackAudioSource.PlayOneShot(WrongButtonAudioClip);
-            int waitLength = (int)(WrongButtonAudioClip.length * 1000) + 1;
-            Task waitForClipFinished = new Task(async () =>
-            {
-                await Task.Delay(waitLength);
-            });
-            waitForClipFinished.Start();
         }
 
         private void PlayCorrectButtonSound()
         {
             FeedbackAudioSource.PlayOneShot(CorrectButtonAudioClip);
-            int waitLength = (int)(CorrectButtonAudioClip.length * 1000) + 1;
-            Task waitForClipFinished = new Task(async () =>
-            {
-                await Task.Delay(waitLength);
-            });
-            waitForClipFinished.Start();
         }
     }
 }

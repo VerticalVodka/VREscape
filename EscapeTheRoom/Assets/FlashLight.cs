@@ -1,6 +1,7 @@
 ﻿using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
+using VREscape;
 
 public class FlashLight : MonoBehaviour
 {
@@ -9,7 +10,20 @@ public class FlashLight : MonoBehaviour
 	private GameObject parent;
 
 	private SteamVR_TrackedObject controller;
-	
+	private RiddleFlashlight riddleFlashlight;
+
+	private RiddleFlashlight RiddleFlashlight
+	{
+		get
+		{
+			if (riddleFlashlight == null)
+			{
+				riddleFlashlight = FindObjectOfType<RiddleFlashlight>();
+			}
+			return riddleFlashlight;
+		}
+	}
+
 	void Start ()
 	{
 		light = GetComponentInChildren<Light>();
@@ -19,6 +33,10 @@ public class FlashLight : MonoBehaviour
 	}
 	
 	void Update () {
+		if (riddleFlashlight.Dark)
+		{
+			light.enabled = false;
+		}
 		if (controller != null)
 		{
 			transform.position = controller.transform.position;

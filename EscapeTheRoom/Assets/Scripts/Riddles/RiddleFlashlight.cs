@@ -14,6 +14,7 @@ namespace VREscape
 
         private bool active = false;
         private bool buttonPressed = false;
+        public bool Dark => !active;
         private FlashLight FlashLight;
         private Drawer drawer;
 

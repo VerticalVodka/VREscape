@@ -39,8 +39,6 @@ public class Drawer : MonoBehaviour
         targetPos = currentPos + transform.forward * MoveLength;
         _startTime = Time.time;
         isOpen = true;
-        FindObjectOfType<FlashLight>().transform.parent = null;
-        FindObjectOfType<SteamVR_TrackedObject>().transform.parent = null;
     }
 
     public void Close()

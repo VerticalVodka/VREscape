@@ -1,5 +1,6 @@
 ﻿using System.Collections.Generic;
 using UnityEngine;
+using TMPro;
 
 namespace VREscape
 {
@@ -11,16 +12,22 @@ namespace VREscape
         private bool _channelIsPlaying = false;
         public AudioSource BackGroundAudioSource;
 
+        public TextMeshPro CurrentFrequency;
+
+        
+
         public override void Update()
         {
             base.Update();
             if (!IsRadioOn)
             {
+                CurrentFrequency.SetText("");
                 BackGroundAudioSource.Stop();
                 ChannelAudioSource.Stop();
             }
             else
             {
+                CurrentFrequency.SetText($"{(CurrentState / 10d):0.0}");
                 if (!BackGroundAudioSource.isPlaying)
                     BackGroundAudioSource.Play();
             }
@@ -29,8 +36,8 @@ namespace VREscape
             {
                 if (Frequencies.ContainsKey(CurrentState + i))
                 {
-                    ChannelAudioSource.volume = 1.0f - Mathf.Abs((float)i) / 5.0f;
-                    BackGroundAudioSource.volume = Mathf.Abs((float) i) / 5.0f;
+                    ChannelAudioSource.volume = (1.0f - Mathf.Abs((float)i) / 5.0f) * .3f;
+                    BackGroundAudioSource.volume = .2f * Mathf.Abs((float) i) / 5.0f;
                     if (!_channelIsPlaying)
                     {
                         ChannelAudioSource.clip = Frequencies[CurrentState + i];

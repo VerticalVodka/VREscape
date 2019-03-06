@@ -89,7 +89,7 @@ public class SteamVR_Camera : MonoBehaviour
         }
 
 		if (ears != null)
-			ears.GetComponent<SteamVR_Ears>().vrcam = this;
+			//ears.GetComponent<SteamVR_Ears>().vrcam = this;
 
 		SteamVR_Render.Add(this);
 	}

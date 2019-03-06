@@ -14,7 +14,7 @@ namespace VREscape
         private Dictionary<Enums.ButtonEnum, bool> _buttons;
         private Dictionary<Enums.RotaryEnum, int> _rotaries;
         public bool TestMode = true;
-        public string COMPort = "COM5";
+        public string COMPort = "COM8";
         private InputQueue _inputQueue;
 
         public int UpdatesPerSecond = 10;
@@ -50,7 +50,7 @@ namespace VREscape
         private void OnDestroy()
         {
             _inputQueue.StopListening();
-        }
+		}
 
         public bool GetButtonState(Enums.ButtonEnum button)
         {

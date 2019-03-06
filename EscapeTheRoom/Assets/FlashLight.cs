@@ -5,52 +5,33 @@ using VREscape;
 
 public class FlashLight : MonoBehaviour
 {
-	private Light light;
+	private Light[] lights;
 
 	private GameObject parent;
 
 	private SteamVR_TrackedObject controller;
-	private RiddleFlashlight riddleFlashlight;
-
-	private RiddleFlashlight RiddleFlashlight
-	{
-		get
-		{
-			if (riddleFlashlight == null)
-			{
-				riddleFlashlight = FindObjectOfType<RiddleFlashlight>();
-			}
-			return riddleFlashlight;
+	
+	private RiddleFlashlight riddleFlashLight;
+	
+	private RiddleFlashlight RiddleFlashLight{
+	get{
+		if(riddleFlashLight == null){
+			riddleFlashLight = FindObjectOfType<RiddleFlashlight>();
 		}
-	}
-
+		return riddleFlashLight;
+	}}
+	
 	void Start ()
 	{
-		light = GetComponentInChildren<Light>();
-		light.enabled = false;
-		parent = this.parent;
-		controller = parent.GetComponentInChildren<SteamVR_TrackedObject>();
+		lights = GetComponentsInChildren<Light>();
+		
 	}
 	
 	void Update () {
-		if (riddleFlashlight.Dark)
-		{
-			light.enabled = false;
-		}
-		if (controller != null)
-		{
-			transform.position = controller.transform.position;
-			transform.rotation = controller.transform.rotation;
+		foreach(var light in lights){
+			light.enabled = !RiddleFlashLight.Dark;
 		}
 	}
 
-	public void EnableLight()
-	{
-		light.enabled = true;
-	}
 
-	public void DisableLight()
-	{
-		light.enabled = false;
-	}
 }

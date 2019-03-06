@@ -29,6 +29,8 @@ public static class Enums
         [Description("d")]
         Drawer,
         [Description("x")]
-        Test
+        Test,
+		[Description("c")]
+        CloseSafe
     }
 }

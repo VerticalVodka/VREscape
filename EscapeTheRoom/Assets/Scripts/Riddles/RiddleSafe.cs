@@ -22,7 +22,7 @@ namespace VREscape
         public Boolean isDebug = false;
         public List<GameObject> Planes;
 
-
+		private HWManager hwManager;
         private AudioSource _audioSource;
         private int _combinationProgress;
 
@@ -32,14 +32,13 @@ namespace VREscape
             _combinationProgress = 0;
             _combinationLength = Planes.Count;
             _audioSource = GetComponent<AudioSource>();
-            //InitiallyHiddenStuff.GetComponentsInChildren<MeshRenderer>().ToList().ForEach(s => s.GetComponent<MeshRenderer>().enabled = false);
+			hwManager = FindObjectOfType<HWManager>();
             InitiallyHiddenStuff.SetActive(false);
             if (AutoStartRiddle) StartRiddle();
         }
 
         public void StartRiddle()
         {
-            //InitiallyHiddenStuff.GetComponentsInChildren<MeshRenderer>().ToList().ForEach(s => s.GetComponent<MeshRenderer>().enabled = true);
             InitiallyHiddenStuff.SetActive(true);
             System.Random rand = new System.Random();
 
@@ -66,6 +65,12 @@ namespace VREscape
             }
             UpdateDirectionPlanes();
             StartCoroutine(SafeRoutine());
+        }
+
+        public void SkipRiddle()
+        {
+            Debug.Log("Skipped Safe Riddle");
+            FinishLevel();
         }
 
         private Directions GetDirectionToTurn()
@@ -153,6 +158,12 @@ namespace VREscape
                 }
             }
             if (isDebug) Debug.Log("RiddleSafe solved");
+            FinishLevel();
+        }
+
+        private void FinishLevel()
+        {
+            hwManager.SendValue(Enums.UnlockEnum.Safe);
             OnRiddleDone?.Invoke(true);
         }
     }

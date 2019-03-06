@@ -143,6 +143,13 @@ namespace VREscape
             LoadNewLevel();
         }
 
+        public void SkipRiddle()
+        {
+            Debug.Log("Skipped SimonSays Riddle");
+            EndLevel();
+            WinGame(false);
+        }
+
         private void LoadNewLevel()
         {
             Debug.Log("Loading new Level");

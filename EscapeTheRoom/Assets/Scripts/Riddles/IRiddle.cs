@@ -10,4 +10,5 @@ public interface IRiddle {
     void StartRiddle();
     event Action<bool> OnRiddleDone;
 
+    void SkipRiddle();
 }

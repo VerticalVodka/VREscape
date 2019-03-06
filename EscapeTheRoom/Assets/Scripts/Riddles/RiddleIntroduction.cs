@@ -84,5 +84,8 @@ namespace Assets.Scripts.Riddles
             else if (OnRiddleDone != null)
                 OnRiddleDone.Invoke(true);
         }
+
+        public void SkipRiddle()
+        {}
     }
 }

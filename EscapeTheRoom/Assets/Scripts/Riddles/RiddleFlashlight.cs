@@ -13,18 +13,21 @@ namespace VREscape
         public event Action<bool> OnRiddleDone;
 
         private bool active = false;
+		public bool Dark => !active;
         private bool buttonPressed = false;
-        public bool Dark => !active;
         private FlashLight FlashLight;
         private Drawer drawer;
 
         private HWManager hwManager;
+			
+		void Start(){
+				drawer = FindObjectOfType<Drawer>();
+				hwManager = FindObjectOfType<HWManager>();
+				FlashLight = FindObjectOfType<FlashLight>();
+		}
 
         public void StartRiddle()
         {
-            drawer = FindObjectOfType<Drawer>();
-            hwManager = FindObjectOfType<HWManager>();
-            FlashLight = FindObjectOfType<FlashLight>();
             active = true;
             Debug.Log("RiddleFlashlight started");
             StartCoroutine(Do());
@@ -42,19 +45,25 @@ namespace VREscape
                     FlashLight = FindObjectOfType<FlashLight>();
                 }
 
-                Ray ray = new Ray(FlashLight.transform.position, -FlashLight.transform.right);
+				Ray ray = new Ray(FlashLight.transform.position, -FlashLight.transform.right);
 
-                if (Physics.Raycast(ray, out hit, Mathf.Infinity, mask))
-                {
-                    var mr = hit.transform.gameObject.GetComponent<MeshRenderer>();
-                    mr.enabled = true;
-                }
+				if (Physics.Raycast(ray, out hit, Mathf.Infinity, mask))
+				{
+					var mr = hit.transform.gameObject.GetComponent<MeshRenderer>();
+					mr.enabled = true;
+				}
 
-                if (hwManager.GetButtonState(Enums.ButtonEnum.Button5))
-                {
-                    buttonPressed = true;
-                }
+				if (hwManager.GetButtonState(Enums.ButtonEnum.Button5))
+				{
+					buttonPressed = true;
+				}
             }
+        }
+
+        public void SkipRiddle()
+        {
+            Debug.Log("Skipped Flashligh Riddle");
+            FinishLevel();
         }
 
         private IEnumerator Do()
@@ -66,23 +75,24 @@ namespace VREscape
                 lightSource.enabled = false;
             }
 
-            FlashLight.EnableLight();
-
             while (!buttonPressed)
             {
                 yield return new WaitForSecondsRealtime(0);
             }
+            
+            Debug.Log("RiddleFlashlight solved");
+            FinishLevel();
+        }
 
+        private void FinishLevel() 
+        {
             foreach (var lightSource in FindObjectOfType<Room>().GetComponentsInChildren<Light>())
             {
                 lightSource.enabled = true;
             }
 
-            FlashLight.DisableLight();
             drawer.Close();
-
-
-            Debug.Log("RiddleFlashlight solved");
+			FlashLight.gameObject.SetActive(false);
             OnRiddleDone?.Invoke(true);
             active = false;
         }

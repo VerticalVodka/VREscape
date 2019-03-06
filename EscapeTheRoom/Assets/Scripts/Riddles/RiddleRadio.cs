@@ -14,6 +14,7 @@ namespace VREscape
         private bool _isActive = false;
         private readonly bool[] _isPressed = new bool[4];
 
+		public AudioSource ElevatorMusicSource;
         public AudioClip RiddleInstruction;
         public AudioClip Instruction927Start;
         public AudioClip Instruction1104Clue1;
@@ -57,9 +58,16 @@ namespace VREscape
             _instructionSource = GetComponent<AudioSource>();
             _radioRotary.IsRadioOn = true;
             _radioRotary.Frequencies.Add(927, Instruction927Start);
-            _instructionSource.clip = RiddleInstruction;
+			_radioRotary.Frequencies.Add(1000,RiddleInstruction);
             _instructionSource.Play();
+			ElevatorMusicSource.Stop();
             StartCoroutine(Do());
+        }
+
+        public void SkipRiddle()
+        {
+            Debug.Log("Skipped Radio Riddle");
+            FinishLevel();
         }
 
         public void Update()
@@ -136,6 +144,11 @@ namespace VREscape
             while (!RiddleSolved(SecondCorrectButtonOrder.Length))
                 yield return new WaitForSecondsRealtime(0);
             Debug.Log("Solved Riddle");
+            FinishLevel();
+        }
+
+        private void FinishLevel()
+        {
             _radioRotary.Frequencies.Clear();
             _radioRotary.IsRadioOn = false;
             OnRiddleDone?.Invoke(true);

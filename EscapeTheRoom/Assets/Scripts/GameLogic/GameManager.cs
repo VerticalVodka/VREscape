@@ -45,7 +45,6 @@ namespace VREscape
             NextRiddle();
         }
 
-        // Use this for initialization
         void Start()
         {
 			Application.targetFrameRate = 60;
@@ -74,12 +73,11 @@ namespace VREscape
 			NextRiddle();
 		}
 
-        // Update is called once per frame
         void Update()
         {
             if (goToNextRiddle)
             {
-                Debug.Log("Starting the next riddle of type " + riddleEnumerator.Current.GetType().ToString());
+                Debug.Log("Starting the next riddle of type " + riddleEnumerator.Current.GetType());
                 goToNextRiddle = false;
                 riddleEnumerator.Current.OnRiddleDone += OnRiddleDoneListener;
                 riddleEnumerator.Current.StartRiddle();
@@ -95,7 +93,8 @@ namespace VREscape
 				hwManager.SendValue(Enums.UnlockEnum.Drawer);
 			}
             if (Input.GetKeyDown(KeyCode.L)) {
-                riddleEnumerator.Current.SkipRiddle(); // todo: nullreference
+	            
+                riddleEnumerator.Current?.SkipRiddle();
             }
         }
     }

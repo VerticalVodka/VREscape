@@ -17,15 +17,23 @@ namespace SerialTest
 
         public InputQueue(string serialInterface)
         {
-            _inputs = new ConcurrentQueue<int>();
-            if (!SerialPort.GetPortNames().Contains(serialInterface))
+            try
             {
-                Debug.Log("Could not Open Serial Port. Did you specify the right COM Port? Check your device manager");
-                Debug.Log("External Hardware Input not available");
-                return;
-            }
+                _inputs = new ConcurrentQueue<int>();
+                if (!SerialPort.GetPortNames().Contains(serialInterface))
+                {
+                    Debug.Log(
+                        "Could not Open Serial Port. Did you specify the right COM Port? Check your device manager");
+                    Debug.Log("Falling back to: " + SerialPort.GetPortNames().First());
+                    serialInterface = SerialPort.GetPortNames().First();
+                }
 
-            _serialPort = new SerialPort(serialInterface);
+                _serialPort = new SerialPort(serialInterface);
+            }
+            catch (InvalidOperationException e)
+            {
+                
+            }
         }
 
         //Called on Startup
@@ -56,13 +64,16 @@ namespace SerialTest
 
         private void SerialDataReceived(object sender, SerialDataReceivedEventArgs e)
         {
-            for (string input = _serialPort.ReadLine(); input != ""; input = _serialPort.ReadLine())
+            if (_serialPort != null)
             {
-                input = input.Trim();
-                Int16 number;
-                if (Int16.TryParse(input, out number))
+                for (string input = _serialPort.ReadLine(); input != ""; input = _serialPort.ReadLine())
                 {
-                    _inputs.Enqueue(number);
+                    input = input.Trim();
+                    Int16 number;
+                    if (Int16.TryParse(input, out number))
+                    {
+                        _inputs.Enqueue(number);
+                    }
                 }
             }
         }
@@ -175,7 +186,7 @@ namespace SerialTest
             {
                 rotary[Enums.RotaryEnum.Rotary2] -= 1;
             }
-            
+
             if ((data & 1024) != 0)
             {
                 buttons[Enums.ButtonEnum.Button5] = true;

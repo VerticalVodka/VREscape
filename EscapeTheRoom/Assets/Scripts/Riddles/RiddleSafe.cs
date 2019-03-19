@@ -40,8 +40,8 @@ namespace VREscape
         public void StartRiddle()
         {
             InitiallyHiddenStuff.SetActive(true);
+            UpdateCombinationProgress();
             System.Random rand = new System.Random();
-
             for (int i = 0; i < _combinationLength; ++i)
             {
                 Directions nextDirection = rand.Next(2) == 0 ? Directions.ClockWise : Directions.CounterClockWise;
@@ -138,6 +138,7 @@ namespace VREscape
                     _combinationProgress = 0;
                     UpdateDirectionPlanes();
                     _audioSource.PlayOneShot(FailSound);
+                    UpdateCombinationProgress();
                     yield return new WaitForSecondsRealtime(0);
                 }
                 else if (Combination[_combinationProgress].Item1 != SafeRotary.CurrentState)
@@ -154,11 +155,21 @@ namespace VREscape
                     }
                     _combinationProgress++;
                     UpdateDirectionPlanes();
+                    UpdateCombinationProgress();
                     yield return new WaitForSecondsRealtime(0);
                 }
             }
             if (isDebug) Debug.Log("RiddleSafe solved");
             FinishLevel();
+        }
+
+        private void UpdateCombinationProgress()
+        {
+            var planes = InitiallyHiddenStuff.GetComponentsInChildren<MeshRenderer>();
+            for(int i = 0; i < _combinationLength; ++i)
+            {
+                planes[i].enabled = i <= _combinationProgress;
+            }
         }
 
         private void FinishLevel()

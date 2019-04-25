@@ -51,7 +51,7 @@ namespace VREscape
         {
             if (_audioSource != null)
             {
-                _audioSource.PlayOneShot(ButtonClickSound);
+                //_audioSource.PlayOneShot(ButtonClickSound);
             }
         }
 
@@ -59,7 +59,7 @@ namespace VREscape
         {
             if (_audioSource != null)
             {
-                _audioSource.PlayOneShot(ButtonReleaseSound);
+                //_audioSource.PlayOneShot(ButtonReleaseSound);
             }
         }
     }

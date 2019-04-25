@@ -14,7 +14,7 @@ namespace VREscape
         private Dictionary<Enums.ButtonEnum, bool> _buttons;
         private Dictionary<Enums.RotaryEnum, int> _rotaries;
         public bool TestMode = true;
-        public string COMPort = "COM8";
+        public string COMPort = "COM9";
         private InputQueue _inputQueue;
 
         public int UpdatesPerSecond = 10;

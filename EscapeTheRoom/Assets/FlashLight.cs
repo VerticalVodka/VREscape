@@ -12,6 +12,21 @@ public class FlashLight : MonoBehaviour
 	private SteamVR_TrackedObject controller;
 	
 	private RiddleFlashlight riddleFlashLight;
+
+    private IEnumerable<MeshRenderer> meshRenderers;
+
+    private bool meshEnabled = true;
+    public bool MeshEnabled {
+        get { return meshEnabled; }
+        set {
+            foreach(var meshRender in meshRenderers)
+            {
+                meshRender.enabled = value;
+            }
+            meshEnabled = value;
+        }
+
+    }
 	
 	private RiddleFlashlight RiddleFlashLight{
 	get{
@@ -24,7 +39,7 @@ public class FlashLight : MonoBehaviour
 	void Start ()
 	{
 		lights = GetComponentsInChildren<Light>();
-		
+        meshRenderers = GetComponentsInChildren<MeshRenderer>();
 	}
 	
 	void Update () {

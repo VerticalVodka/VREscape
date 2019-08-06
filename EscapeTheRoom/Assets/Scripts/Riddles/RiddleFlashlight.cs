@@ -15,7 +15,7 @@ namespace VREscape
         private bool active = false;
 		public bool Dark => !active;
         private bool buttonPressed = false;
-        private FlashLight FlashLight;
+        public FlashLight FlashLight;
         private Drawer drawer;
 
         private HWManager hwManager;
@@ -24,12 +24,12 @@ namespace VREscape
 		void Start(){
 				drawer = FindObjectOfType<Drawer>();
 				hwManager = FindObjectOfType<HWManager>();
-				FlashLight = FindObjectOfType<FlashLight>();
 		}
 
         public void StartRiddle()
         {
             active = true;
+            FlashLight.MeshEnabled = true;
             Debug.Log("RiddleFlashlight started");
             StartCoroutine(Do());
         }

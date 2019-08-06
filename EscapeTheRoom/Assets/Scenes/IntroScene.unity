@@ -477,7 +477,7 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   TestMode: 1
-  COMPort: COM5
+  COMPort: COM9
   UpdatesPerSecond: 10
 --- !u!4 &1814085690
 Transform:

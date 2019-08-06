@@ -14,6 +14,8 @@ namespace VREscape
         private bool _isActive = false;
         private readonly bool[] _isPressed = new bool[4];
 
+		public RadioRandomBackgroundNoise RandomBackgroundNoise;
+		
 		public AudioSource ElevatorMusicSource;
         public AudioClip RiddleInstruction;
         public AudioClip Instruction927Start;
@@ -51,6 +53,7 @@ namespace VREscape
         public void StartRiddle()
         {
             Debug.Log("RiddleRadio started");
+			RandomBackgroundNoise.StartNoise();
             _hwManager = FindObjectOfType<HWManager>();
             _isActive = true;
             _radioRotary = FindObjectOfType<RadioRotary>();
@@ -149,6 +152,7 @@ namespace VREscape
 
         private void FinishLevel()
         {
+			RandomBackgroundNoise.StopNoise();
             _radioRotary.Frequencies.Clear();
             _radioRotary.IsRadioOn = false;
             OnRiddleDone?.Invoke(true);

@@ -20,7 +20,7 @@ namespace VREscape
         public int StartValue;
         public int CurrentState;
 
-        protected readonly int changeMultiplier = 1;
+        protected int changeMultiplier = 1;
 
         public virtual void Start()
         {

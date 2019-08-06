@@ -39,7 +39,7 @@ namespace VREscape
             if (newRotaryState != CurrentState)
             {
                 int rotation = newRotaryState - CurrentState;
-                gameObject.transform.Rotate(Vector3.up, (360 / RotaryTotalSteps * rotation));
+                gameObject.transform.Rotate(Vector3.down, (360 / RotaryTotalSteps * rotation));
                 CurrentState = newRotaryState;
                 if (flips && CurrentState > MaxValue)
                 {

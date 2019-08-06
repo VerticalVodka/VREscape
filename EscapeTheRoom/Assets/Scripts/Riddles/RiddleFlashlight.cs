@@ -19,6 +19,7 @@ namespace VREscape
         private Drawer drawer;
 
         private HWManager hwManager;
+		
 			
 		void Start(){
 				drawer = FindObjectOfType<Drawer>();
@@ -90,7 +91,9 @@ namespace VREscape
             {
                 lightSource.enabled = true;
             }
-
+			
+			GameObject.FindWithTag("hinttext").SetActive(false);
+			
             drawer.Close();
 			FlashLight.gameObject.SetActive(false);
             OnRiddleDone?.Invoke(true);

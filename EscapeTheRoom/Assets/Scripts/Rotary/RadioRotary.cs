@@ -14,7 +14,7 @@ namespace VREscape
 
         public TextMeshPro CurrentFrequency;
 
-        
+        new protected readonly int changeMultiplier = -1;
 
         public override void Update()
         {

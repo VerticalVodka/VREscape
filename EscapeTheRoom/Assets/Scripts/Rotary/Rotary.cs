@@ -20,6 +20,8 @@ namespace VREscape
         public int StartValue;
         public int CurrentState;
 
+        protected readonly int changeMultiplier = 1;
+
         public virtual void Start()
         {
             _hwManager = FindObjectOfType<HWManager>();
@@ -35,7 +37,7 @@ namespace VREscape
 
         public virtual void Update()
         {
-            int newRotaryState = _hwManager.GetRotaryState(RotaryType) + CurrentState;
+            int newRotaryState = CurrentState + changeMultiplier*_hwManager.GetRotaryState(RotaryType);
             if (newRotaryState != CurrentState)
             {
                 int rotation = newRotaryState - CurrentState;

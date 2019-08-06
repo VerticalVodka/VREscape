@@ -2,7 +2,6 @@
 using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
-using System.Linq;
 
 namespace VREscape
 {
@@ -22,19 +21,35 @@ namespace VREscape
         public Boolean isDebug = false;
         public List<GameObject> Planes;
 
-		private HWManager hwManager;
+        private HWManager hwManager;
         private AudioSource _audioSource;
         private int _combinationProgress;
+        private bool isActive = false;
 
         private void Start()
         {
             Debug.Log("RiddleSafe started");
+            isActive = true;
             _combinationProgress = 0;
             _combinationLength = Planes.Count;
             _audioSource = GetComponent<AudioSource>();
-			hwManager = FindObjectOfType<HWManager>();
+            hwManager = FindObjectOfType<HWManager>();
             InitiallyHiddenStuff.SetActive(false);
-            if (AutoStartRiddle) StartRiddle();
+            if (AutoStartRiddle)
+                StartRiddle();
+        }
+
+        private void Update()
+        {
+            if (isActive)
+            {
+
+                for(int i = 0; i < Combination.Count; ++i)
+                {
+                    int rotation = Combination[i].Item2 == Directions.ClockWise ? 1 : -1;
+                    Planes[i].transform.rotation = Planes[i].transform.rotation * Quaternion.Euler(0, 1, 0);
+                }
+            }
         }
 
         public void StartRiddle()
@@ -88,13 +103,15 @@ namespace VREscape
             {
                 TurnClockWisePlane.GetComponent<MeshRenderer>().enabled = true;
                 TurnCounterClockWisePlane.GetComponent<MeshRenderer>().enabled = false;
-                if (isDebug) Debug.Log("Enabled Plane Clockwise");
+                if (isDebug)
+                    Debug.Log("Enabled Plane Clockwise");
             }
             else
             {
                 TurnClockWisePlane.GetComponent<MeshRenderer>().enabled = false;
                 TurnCounterClockWisePlane.GetComponent<MeshRenderer>().enabled = true;
-                if (isDebug) Debug.Log("Enabled Plane Counterclockwise");
+                if (isDebug)
+                    Debug.Log("Enabled Plane Counterclockwise");
             }
         }
 
@@ -102,22 +119,26 @@ namespace VREscape
         {
             if (safeRotary.LastState == safeRotary.MinValue && safeRotary.CurrentState == safeRotary.MaxValue)
             {
-                if (isDebug) Debug.Log("CCW-flip");
+                if (isDebug)
+                    Debug.Log("CCW-flip");
                 return Directions.CounterClockWise;
             }
             else if (safeRotary.LastState == safeRotary.MaxValue && safeRotary.CurrentState == safeRotary.MinValue)
             {
-                if (isDebug) Debug.Log("CW-flip");
+                if (isDebug)
+                    Debug.Log("CW-flip");
                 return Directions.ClockWise;
             }
             else if (safeRotary.LastState < safeRotary.CurrentState)
             {
-                if (isDebug) Debug.Log("CW");
+                if (isDebug)
+                    Debug.Log("CW");
                 return Directions.ClockWise;
             }
             else
             {
-                if (isDebug) Debug.Log("CCW");
+                if (isDebug)
+                    Debug.Log("CCW");
                 return Directions.CounterClockWise;
             }
         }
@@ -134,7 +155,8 @@ namespace VREscape
                 }
                 else if (GetDirectionOfTurn(SafeRotary) != Combination[_combinationProgress].Item2)
                 { // Mistakes were made
-                    if (isDebug) Debug.Log("Mistake made");
+                    if (isDebug)
+                        Debug.Log("Mistake made");
                     _combinationProgress = 0;
                     UpdateDirectionPlanes();
                     _audioSource.PlayOneShot(FailSound);
@@ -147,11 +169,13 @@ namespace VREscape
                 }
                 else
                 {
-                    if (isDebug) Debug.Log("Combination found");
+                    if (isDebug)
+                        Debug.Log("Combination found");
                     _audioSource.PlayOneShot(CombinationDigitMatchesSound);
                     if (_combinationProgress < Combination.Count - 1)
                     {
-                        if (isDebug) Debug.Log($"Next Target: {Combination[_combinationProgress + 1]}");
+                        if (isDebug)
+                            Debug.Log($"Next Target: {Combination[_combinationProgress + 1]}");
                     }
                     _combinationProgress++;
                     UpdateDirectionPlanes();
@@ -159,14 +183,15 @@ namespace VREscape
                     yield return new WaitForSecondsRealtime(0);
                 }
             }
-            if (isDebug) Debug.Log("RiddleSafe solved");
+            if (isDebug)
+                Debug.Log("RiddleSafe solved");
             FinishLevel();
         }
 
         private void UpdateCombinationProgress()
         {
             var planes = InitiallyHiddenStuff.GetComponentsInChildren<MeshRenderer>();
-            for(int i = 0; i < _combinationLength; ++i)
+            for (int i = 0; i < _combinationLength; ++i)
             {
                 planes[i].enabled = i <= _combinationProgress;
             }
@@ -174,6 +199,7 @@ namespace VREscape
 
         private void FinishLevel()
         {
+            isActive = false;
             hwManager.SendValue(Enums.UnlockEnum.Safe);
             OnRiddleDone?.Invoke(true);
         }

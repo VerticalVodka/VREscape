@@ -92,7 +92,7 @@ namespace VREscape
                 lightSource.enabled = true;
             }
 			
-			GameObject.FindWithTag("hinttext").SetActive(false);
+			GameObject.FindWithTag("hinttext")?.SetActive(false);
 			
             drawer.Close();
 			FlashLight.gameObject.SetActive(false);

@@ -50,6 +50,7 @@ namespace VREscape
         private void OnDestroy()
         {
             _inputQueue.StopListening();
+			Debug.Log("Disposed correctly");
 		}
 
         public bool GetButtonState(Enums.ButtonEnum button)

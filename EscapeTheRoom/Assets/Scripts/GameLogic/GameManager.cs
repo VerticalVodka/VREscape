@@ -1,5 +1,4 @@
 ﻿using System;
-using System.Collections;
 using System.Collections.Generic;
 using System.Linq;
 using System.Threading.Tasks;
@@ -13,10 +12,8 @@ namespace VREscape
         private List<IRiddle> Riddles = new List<IRiddle>();
         public List<GameObject> ObjectsWithRiddles = new List<GameObject>();
         private IEnumerator<IRiddle> riddleEnumerator;
-		
-		public AudioClip Intro;
-		public AudioSource source;
-		private HWManager hwManager;
+
+        private HWManager hwManager;
 
         public int PauseBetweenRiddlesInMs = 1000;
 
@@ -29,28 +26,32 @@ namespace VREscape
                 Task waitBeforeNextRiddle = new Task(async () =>
                 {
                     if (PauseBetweenRiddlesInMs > 0)
+                    {
                         await Task.Delay(PauseBetweenRiddlesInMs);
+                    }
+
                     goToNextRiddle = true;
                 });
                 waitBeforeNextRiddle.Start();
             }
-			else{
-				SceneManager.LoadScene("OutroScene");
-			}
+            else
+            {
+                SceneManager.LoadScene("OutroScene");
+            }
         }
 
-        void OnRiddleDoneListener(bool value)
+        private void OnRiddleDoneListener(bool value)
         {
             riddleEnumerator.Current.OnRiddleDone -= OnRiddleDoneListener;
             NextRiddle();
         }
 
-        void Start()
+        private void Start()
         {
-			Application.targetFrameRate = 60;
-			QualitySettings.vSyncCount = 0;
-			Time.fixedDeltaTime =  1 /60;
-			hwManager = FindObjectOfType<HWManager>();
+            Application.targetFrameRate = 60;
+            QualitySettings.vSyncCount = 0;
+            Time.fixedDeltaTime = 1 / 60;
+            hwManager = FindObjectOfType<HWManager>();
             try
             {
                 var Riddles = ObjectsWithRiddles
@@ -59,21 +60,15 @@ namespace VREscape
                                 .Where(r => r != null)
                                 .ToList();
                 riddleEnumerator = Riddles.GetEnumerator();
-				StartCoroutine(FirstRiddle());
+                NextRiddle();
             }
             catch (Exception)
             {
                 Debug.Log("GameManager Failed");
             }
         }
-		
-		IEnumerator FirstRiddle(){
-			source.PlayOneShot(Intro);
-			yield return new WaitForSecondsRealtime(Intro.length);
-			NextRiddle();
-		}
 
-        void Update()
+        private void Update()
         {
             if (goToNextRiddle)
             {
@@ -82,18 +77,22 @@ namespace VREscape
                 riddleEnumerator.Current.OnRiddleDone += OnRiddleDoneListener;
                 riddleEnumerator.Current.StartRiddle();
             }
-			
-			if (Input.GetKeyDown(KeyCode.C)){
-				hwManager.SendValue(Enums.UnlockEnum.CloseSafe);
-			}
-			if (Input.GetKeyDown(KeyCode.S)){
-				hwManager.SendValue(Enums.UnlockEnum.Safe);
-			}
-			if (Input.GetKeyDown(KeyCode.D)){
-				hwManager.SendValue(Enums.UnlockEnum.Drawer);
-			}
-            if (Input.GetKeyDown(KeyCode.L)) {
-	            
+
+            if (Input.GetKeyDown(KeyCode.C))
+            {
+                hwManager.SendValue(Enums.UnlockEnum.CloseSafe);
+            }
+            if (Input.GetKeyDown(KeyCode.S))
+            {
+                hwManager.SendValue(Enums.UnlockEnum.Safe);
+            }
+            if (Input.GetKeyDown(KeyCode.D))
+            {
+                hwManager.SendValue(Enums.UnlockEnum.Drawer);
+            }
+            if (Input.GetKeyDown(KeyCode.L))
+            {
+
                 riddleEnumerator.Current?.SkipRiddle();
             }
         }

@@ -1,4 +1,5 @@
 ﻿using System;
+using System.Collections;
 using System.Collections.Generic;
 using System.Linq;
 using System.Text;
@@ -12,80 +13,64 @@ namespace Assets.Scripts.Riddles
     {
         public event Action<bool> OnRiddleDone;
 
-        public AudioSource audioSource;
-        public AudioClip wakeUpClip;
+        public AudioSource IntroductionSource;
+        public AudioSource AmbienceSource;
+        public AudioSource ElevatorSource;
         public AudioClip introductionClip;
         public List<Enums.ButtonEnum> buttonsThatStart;
-        public int wakeUpDelay = 1500;
 
         private HWManager hwManager;
-        private bool done = false;
-        private bool wakeUpFinished = false;
-        private bool shouldPlayWakeupClip = false;
 
         public void StartRiddle()
         {
-            PlayWakeUpClip();
+            StartCoroutine(PlaySoundsCoroutine());
         }
 
-        private void PlayWakeUpClip()
+        private void FinishRiddle()
         {
-            wakeUpFinished = false;
-            shouldPlayWakeupClip = true;
+            OnRiddleDone?.Invoke(true);
         }
 
-        private void StopWakeUpClip()
+        public void SkipRiddle()
         {
-            shouldPlayWakeupClip = false;
+            StopAllCoroutines();
+            FinishRiddle();
         }
 
-        private void PlayIntroductionAndThenFinish()
-        {
-            audioSource.PlayOneShot(introductionClip);
+        public float DelayBeforeStart = 1.5f;
+        public float TimeToVolumeUpOfAmbience = 0.5f;
+        public float DelayBetweenAmbienceToElevatorMusic = 1.5f;
+        public float TimeToVolumeUpOfElevator = 0.5f;
+        public float DelayBetweenElevatorMusicAndIntroduction = 1.5f;
 
-            int waitLength = (int)(introductionClip.length * 1000) + 1;
-            Task waitForClipFinished = new Task(async () =>
+        private IEnumerator PlaySoundsCoroutine()
+        {
+            yield return new WaitForSecondsRealtime(DelayBeforeStart);
+            LinearVolumeUpOfSource(AmbienceSource, TimeToVolumeUpOfAmbience);
+
+            yield return new WaitForSecondsRealtime(DelayBetweenAmbienceToElevatorMusic);
+            LinearVolumeUpOfSource(ElevatorSource, TimeToVolumeUpOfElevator);
+
+            yield return new WaitForSecondsRealtime(DelayBetweenElevatorMusicAndIntroduction);
+            IntroductionSource.PlayOneShot(introductionClip);
+
+            yield return new WaitForSecondsRealtime((int)(introductionClip.length * 1000) + 1);
+            FinishRiddle();
+        }
+
+        private void LinearVolumeUpOfSource(AudioSource source, float timeToVolumeUp)
+        {
+            var t = new Task(() =>
             {
-                await Task.Delay(waitLength);
-                done = true;
+                for (int i = 0; i <= 50; ++i)
+                    source.volume = i * (50 / timeToVolumeUp);
             });
-            waitForClipFinished.Start();
+            t.Start();
         }
 
         public void Start()
         {
             hwManager = FindObjectOfType<HWManager>();
         }
-
-        public void Update()
-        {
-            if (!done)
-            {
-                if (!wakeUpFinished && shouldPlayWakeupClip)
-                {
-                    shouldPlayWakeupClip = false;
-                    audioSource.PlayOneShot(wakeUpClip);
-
-                    int waitLength = (int)(wakeUpClip.length * 1000) + wakeUpDelay;
-                    Task waitForClipFinished = new Task(async () =>
-                    {
-                        await Task.Delay(waitLength);
-                        shouldPlayWakeupClip = true;
-                    });
-                    waitForClipFinished.Start();
-                }
-
-                if (buttonsThatStart.Any(btn => hwManager.GetButtonState(btn)))
-                {
-                    wakeUpFinished = true;
-                    PlayIntroductionAndThenFinish();
-                }
-            }
-            else if (OnRiddleDone != null)
-                OnRiddleDone.Invoke(true);
-        }
-
-        public void SkipRiddle()
-        {}
     }
 }

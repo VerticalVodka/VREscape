@@ -73,7 +73,7 @@ namespace VREscape
 
         public void Update()
         {
-            if (!isActive || radioRotary.Frequencies.Count <= 1 || wantedSequence == null || currentButtonIdx > wantedSequence.Length)
+            if (!isActive || radioRotary.Frequencies.Count <= 1 || wantedSequence == null || currentButtonIdx >= wantedSequence.Length)
                 return;
 
             var pressedButton = GetPressedButton();

@@ -41,13 +41,14 @@ namespace VREscape
 
             for (var i = -5; i <= 5; ++i)
             {
-                if (Frequencies.ContainsKey(CurrentState + i))
+                int roundedState = RoundedFrequenceyIfNeeded();
+                if (Frequencies.ContainsKey(roundedState + i))
                 {
                     ChannelAudioSource.volume = (1.0f - Mathf.Abs((float)i) / 5.0f) * .3f;
                     BackGroundAudioSource.volume = .2f * Mathf.Abs((float) i) / 5.0f;
                     if (!_channelIsPlaying)
                     {
-                        ChannelAudioSource.clip = Frequencies[CurrentState + i];
+                        ChannelAudioSource.clip = Frequencies[roundedState + i];
                         ChannelAudioSource.Play();
                         _channelIsPlaying = true;
                     }

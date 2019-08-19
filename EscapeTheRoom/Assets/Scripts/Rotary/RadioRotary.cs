@@ -64,7 +64,6 @@ namespace VREscape
             {
                 if (Math.Abs(CurrentState - RoundToNumbers[i]) <= 4)
                 {
-                    Debug.Log($"Rounding {CurrentState} to {RoundToNumbers[i]}");
                     return RoundToNumbers[i];
                 }
             }

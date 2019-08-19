@@ -17,7 +17,6 @@ namespace Assets.Scripts.Riddles
         public AudioSource AmbienceSource;
         public AudioSource ElevatorSource;
         public AudioClip introductionClip;
-        public List<Enums.ButtonEnum> buttonsThatStart;
 
         private HWManager hwManager;
 
@@ -46,26 +45,28 @@ namespace Assets.Scripts.Riddles
         private IEnumerator PlaySoundsCoroutine()
         {
             yield return new WaitForSecondsRealtime(DelayBeforeStart);
-            LinearVolumeUpOfSource(AmbienceSource, TimeToVolumeUpOfAmbience);
+			Debug.Log("1");
+            StartCoroutine(LinearVolumeUpOfSource(AmbienceSource, TimeToVolumeUpOfAmbience));
 
             yield return new WaitForSecondsRealtime(DelayBetweenAmbienceToElevatorMusic);
-            LinearVolumeUpOfSource(ElevatorSource, TimeToVolumeUpOfElevator);
+			Debug.Log("2");
+            StartCoroutine(LinearVolumeUpOfSource(ElevatorSource, TimeToVolumeUpOfElevator));
 
             yield return new WaitForSecondsRealtime(DelayBetweenElevatorMusicAndIntroduction);
+			Debug.Log("3");
             IntroductionSource.PlayOneShot(introductionClip);
 
             yield return new WaitForSecondsRealtime((int)(introductionClip.length * 1000) + 1);
             FinishRiddle();
         }
 
-        private void LinearVolumeUpOfSource(AudioSource source, float timeToVolumeUp)
+        private IEnumerator LinearVolumeUpOfSource(AudioSource source, float timeToVolumeUp)
         {
-            var t = new Task(() =>
-            {
-                for (int i = 0; i <= 50; ++i)
-                    source.volume = i * (50 / timeToVolumeUp);
-            });
-            t.Start();
+			for (int i = 1; i <= 100; ++i) {
+				source.volume = ((float)i) / 100;
+				Debug.Log("Volume set to " + (((float)i) / 100));
+				yield return new WaitForSecondsRealtime(timeToVolumeUp / 100);
+			}
         }
 
         public void Start()

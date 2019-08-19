@@ -157,9 +157,16 @@ namespace VREscape
             if (currentButtonIdx > wantedSequence.Length)
             {
                 if (wantedSequence == FirstCorrectButtonOrder)
+                {
+                    Debug.Log("Solved Sequence 1");
                     solvedSequence1 = true;
+                }
+
                 if (wantedSequence == SecondCorrectButtonOrder)
+                {
+                    Debug.Log("Solved Sequence 2");
                     solvedSequence2 = true;
+                }
             }
         }
 

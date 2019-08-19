@@ -8,11 +8,11 @@ namespace VREscape
 {
     public class RiddleRadio : MonoBehaviour, IRiddle
     {
-        private RadioRotary _radioRotary;
-        private HWManager _hwManager;
-        private AudioSource _buttonAudioSource;
-        private bool _isActive = false;
-        private readonly bool[] _isPressed = new bool[4];
+        private RadioRotary radioRotary;
+        private HWManager hwManager;
+        private AudioSource buttonAudioSource;
+        private bool isActive = false;
+        private readonly bool[] isPressed = new bool[4];
 
 		public RadioRandomBackgroundNoise RandomBackgroundNoise;
 		
@@ -24,7 +24,7 @@ namespace VREscape
         public AudioClip CorrectButton;
         public AudioClip WrongButton;
 
-        private AudioSource _instructionSource;
+        private AudioSource instructionSource;
 
         public Enums.ButtonEnum[] FirstCorrectButtonOrder = new[]
         {
@@ -40,29 +40,27 @@ namespace VREscape
             Enums.ButtonEnum.Button4
         };
 
-        private int _currentButton;
-        private bool _solvedFirstButtonOrder = false;
-        private bool _allowButtons = false;
+        private int currentButtonIdx;
+        private bool solvedSequence1 = false;
+        private bool solvedSequence2 = false;
+        private readonly int maxDifferenceToBeNearFrequency = 25;
+        Enums.ButtonEnum[] wantedSequence = null;
 
         public event Action<bool> OnRiddleDone;
-
-        public void Start()
-        {
-        }
 
         public void StartRiddle()
         {
             Debug.Log("RiddleRadio started");
 			RandomBackgroundNoise.StartNoise();
-            _hwManager = FindObjectOfType<HWManager>();
-            _isActive = true;
-            _radioRotary = FindObjectOfType<RadioRotary>();
-            _buttonAudioSource = GetComponent<AudioSource>();
-            _instructionSource = GetComponent<AudioSource>();
-            _radioRotary.IsRadioOn = true;
-            _radioRotary.Frequencies.Add(927, Instruction927Start);
-			_radioRotary.Frequencies.Add(1000,RiddleInstruction);
-            _instructionSource.Play();
+            hwManager = FindObjectOfType<HWManager>();
+            isActive = true;
+            radioRotary = FindObjectOfType<RadioRotary>();
+            buttonAudioSource = GetComponent<AudioSource>();
+            instructionSource = GetComponent<AudioSource>();
+            radioRotary.IsRadioOn = true;
+            radioRotary.Frequencies.Add(927, Instruction927Start);
+			radioRotary.Frequencies.Add(1000,RiddleInstruction);
+            instructionSource.Play();
 			ElevatorMusicSource.Stop();
             StartCoroutine(Do());
         }
@@ -75,32 +73,21 @@ namespace VREscape
 
         public void Update()
         {
-            //Debug.Log(_radioRotary.CurrentState);
-            if (!_isActive || _radioRotary.Frequencies.Count <= 1 || !_allowButtons) return;
+            if (!isActive || radioRotary.Frequencies.Count <= 1 || wantedSequence == null || currentButtonIdx > wantedSequence.Length)
+                return;
 
             var pressedButton = GetPressedButton();
             if (pressedButton == null) return;
-            //Debug.Log(pressedButton);
-            Enums.ButtonEnum[] correctButtonOrder;
-            if (!_solvedFirstButtonOrder)
+
+            if (pressedButton == wantedSequence[currentButtonIdx])
             {
-                correctButtonOrder = FirstCorrectButtonOrder;
+                ++currentButtonIdx;
+                buttonAudioSource.PlayOneShot(CorrectButton);
+                CheckForRiddleSolved();
             } else
             {
-                correctButtonOrder = SecondCorrectButtonOrder;
-            }
-
-            if (pressedButton == correctButtonOrder[_currentButton])
-            {
-                _currentButton++;
-                _buttonAudioSource.clip = CorrectButton;
-                _buttonAudioSource.Play();
-            }
-            else
-            {
-                _currentButton = 0;
-                _buttonAudioSource.clip = WrongButton;
-                _buttonAudioSource.Play();
+                currentButtonIdx = 0;
+                buttonAudioSource.PlayOneShot(WrongButton);
             }
         }
 
@@ -110,17 +97,17 @@ namespace VREscape
             foreach (var currentButton in new [] {Enums.ButtonEnum.Button1, Enums.ButtonEnum.Button2, Enums.ButtonEnum.Button3, Enums.ButtonEnum.Button4 })
             {
                 
-                if (_hwManager.GetButtonState(currentButton))
+                if (hwManager.GetButtonState(currentButton))
                 {
-                    if (!_isPressed[i])
+                    if (!isPressed[i])
                     {
-                        _isPressed[i] = true;
+                        isPressed[i] = true;
                         return currentButton;
                     }
                 }
                 else
                 {
-                    _isPressed[i] = false;
+                    isPressed[i] = false;
                 }
                 i++;
             }
@@ -129,38 +116,79 @@ namespace VREscape
 
         private IEnumerator Do()
         {
-            while (_radioRotary.CurrentState != 927)
+            while (!NearFreq(927, 10))
                 yield return new WaitForSecondsRealtime(0);
             Debug.Log("Right Frequence");
-            _radioRotary.Frequencies.Add(1104, Instruction1104Clue1);
+            radioRotary.Frequencies.Add(1104, Instruction1104Clue1);
+            radioRotary.Frequencies.Add(800, Instruction0800Clue2);
 
-            while (_radioRotary.CurrentState != 1104)
-                yield return new WaitForSecondsRealtime(0);
-            _allowButtons = true;
+            while (!RiddleIsSolved())
+            {
+                if (NearFreq(1104))
+                {
+                    SetWantedButtonSequenceTo(FirstCorrectButtonOrder);
+                } else if (NearFreq(800))
+                {
+                    SetWantedButtonSequenceTo(SecondCorrectButtonOrder);
+                } else
+                {
+                    SetToNoWantedButtonSequence();
+                }
 
-            while (!RiddleSolved(FirstCorrectButtonOrder.Length))
                 yield return new WaitForSecondsRealtime(0);
-            _solvedFirstButtonOrder = true;
-            _currentButton = 0;
-            _radioRotary.Frequencies.Add(800, Instruction0800Clue2);
+            }
 
-            while (!RiddleSolved(SecondCorrectButtonOrder.Length))
-                yield return new WaitForSecondsRealtime(0);
             Debug.Log("Solved Riddle");
             FinishLevel();
+        }
+
+        private bool RiddleIsSolved()
+        {
+            return solvedSequence1 && solvedSequence2;
+        }
+
+        private bool NearFreq(int frequency, int? overrideMaxDiff = null)
+        {
+            return Math.Abs(radioRotary.CurrentState - frequency) < (overrideMaxDiff ?? maxDifferenceToBeNearFrequency);
+        }
+
+        private void CheckForRiddleSolved()
+        {
+            if (currentButtonIdx > wantedSequence.Length)
+            {
+                if (wantedSequence == FirstCorrectButtonOrder)
+                    solvedSequence1 = true;
+                if (wantedSequence == SecondCorrectButtonOrder)
+                    solvedSequence2 = true;
+            }
+        }
+
+        private void SetWantedButtonSequenceTo(Enums.ButtonEnum[] sequence)
+        {
+            if (wantedSequence != sequence)
+            {
+                currentButtonIdx = 0;
+                wantedSequence = sequence;
+            }
+        }
+
+        private void SetToNoWantedButtonSequence()
+        {
+            currentButtonIdx = 0;
+            wantedSequence = null;
         }
 
         private void FinishLevel()
         {
 			RandomBackgroundNoise.StopNoise();
-            _radioRotary.Frequencies.Clear();
-            _radioRotary.IsRadioOn = false;
+            radioRotary.Frequencies.Clear();
+            radioRotary.IsRadioOn = false;
             OnRiddleDone?.Invoke(true);
         }
 
         private bool RiddleSolved(int correctButtonLength)
         {
-            return _currentButton >= correctButtonLength;
+            return currentButtonIdx >= correctButtonLength;
         }
     }
 }

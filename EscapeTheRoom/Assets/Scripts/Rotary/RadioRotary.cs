@@ -1,6 +1,7 @@
 ﻿using System.Collections.Generic;
 using UnityEngine;
 using TMPro;
+using System;
 
 namespace VREscape
 {
@@ -12,11 +13,13 @@ namespace VREscape
         private bool _channelIsPlaying = false;
         public AudioSource BackGroundAudioSource;
 
+        public int[] RoundToNumbers = new int[] { 800, 927, 1000, 1104 };
+
         public TextMeshPro CurrentFrequency;
 
         public RadioRotary()
         {
-            changeMultiplier = -1;
+            changeMultiplier = -18;
         }
 
         public override void Update()
@@ -30,7 +33,8 @@ namespace VREscape
             }
             else
             {
-                CurrentFrequency.SetText($"{(CurrentState / 10d):0.0}");
+                int roundedFreq = RoundedFrequenceyIfNeeded();
+                CurrentFrequency.SetText($"{(roundedFreq / 10d):0.0}");
                 if (!BackGroundAudioSource.isPlaying)
                     BackGroundAudioSource.Play();
             }
@@ -51,6 +55,19 @@ namespace VREscape
                     _channelIsPlaying = ChannelAudioSource.isPlaying;
                 }
             }
+        }
+
+        private int RoundedFrequenceyIfNeeded()
+        {
+            for(int i = 0; i < RoundToNumbers.Length; ++i)
+            {
+                if (Math.Abs(CurrentState - RoundToNumbers[i]) <= 4)
+                {
+                    Debug.Log($"Rounding {CurrentState} to {RoundToNumbers[i]}");
+                    return RoundToNumbers[i];
+                }
+            }
+            return CurrentState;
         }
     }
 }

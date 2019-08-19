@@ -2,8 +2,6 @@
 using System.Collections;
 using System.Collections.Generic;
 using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
 using UnityEngine;
 
 namespace VREscape
@@ -12,19 +10,85 @@ namespace VREscape
     {
         public event Action<bool> OnRiddleDone;
 
+        public GameObject LookGO;
+        public GameObject WhereGO;
+        public GameObject TheGO;
+        public GameObject LightGO;
+        public GameObject CameGO;
+        public GameObject FromGO;
+
+        public AudioClip LookAudioFW;
+        public AudioClip WhereAudioFW;
+        public AudioClip TheAudioFW;
+        public AudioClip LightAudioFW;
+        public AudioClip CameAudioFW;
+        public AudioClip FromAudioFW;
+
+        public AudioClip LookAudioBW;
+        public AudioClip WhereAudioBW;
+        public AudioClip TheAudioBW;
+        public AudioClip LightAudioBW;
+        public AudioClip CameAudioBW;
+        public AudioClip FromAudioBW;
+
+        public AudioSource RiddleAudioSource;
+
+        private List<WordBundle> wordBundles;
+        private IEnumerator<WordBundle> wordBundleEnumerator;
+
         private bool active = false;
-		public bool Dark => !active;
+        public bool Dark => !active;
         private bool buttonPressed = false;
         public FlashLight FlashLight;
         private Drawer drawer;
 
         private HWManager hwManager;
-		
-			
-		void Start(){
-				drawer = FindObjectOfType<Drawer>();
-				hwManager = FindObjectOfType<HWManager>();
-		}
+
+
+        void Start()
+        {
+            drawer = FindObjectOfType<Drawer>();
+            hwManager = FindObjectOfType<HWManager>();
+            wordBundles = new List<WordBundle>()
+            {
+                new WordBundle
+                {
+                    Parent = LookGO,
+                    ForwardClip = LookAudioFW,
+                    BackwardClip = LookAudioBW
+                },
+                 new WordBundle
+                {
+                    Parent = WhereGO,
+                    ForwardClip = WhereAudioFW,
+                    BackwardClip = WhereAudioBW
+                },
+                  new WordBundle
+                {
+                    Parent = TheGO,
+                    ForwardClip = TheAudioFW,
+                    BackwardClip = TheAudioBW
+                },
+                   new WordBundle
+                {
+                    Parent = LightGO,
+                    ForwardClip = LightAudioFW,
+                    BackwardClip = LightAudioBW
+                },
+                    new WordBundle
+                {
+                    Parent = CameGO,
+                    ForwardClip = CameAudioFW,
+                    BackwardClip = CameAudioBW
+                },  new WordBundle
+                {
+                    Parent = FromGO,
+                    ForwardClip = FromAudioFW,
+                    BackwardClip = FromAudioBW
+                }
+            };
+
+        }
 
         public void StartRiddle()
         {
@@ -32,6 +96,7 @@ namespace VREscape
             FlashLight.MeshEnabled = true;
             Debug.Log("RiddleFlashlight started");
             StartCoroutine(Do());
+            StartCoroutine(PlayAudioHints());
         }
 
         private void Update()
@@ -46,18 +111,18 @@ namespace VREscape
                     FlashLight = FindObjectOfType<FlashLight>();
                 }
 
-				Ray ray = new Ray(FlashLight.transform.position, -FlashLight.transform.right);
+                Ray ray = new Ray(FlashLight.transform.position, -FlashLight.transform.right);
 
-				if (Physics.Raycast(ray, out hit, Mathf.Infinity, mask))
-				{
-					var mr = hit.transform.gameObject.GetComponent<MeshRenderer>();
-					mr.enabled = true;
-				}
+                if (Physics.Raycast(ray, out hit, Mathf.Infinity, mask))
+                {
+                    var mr = hit.transform.gameObject.GetComponent<MeshRenderer>();
+                    mr.enabled = true;
+                }
 
-				if (hwManager.GetButtonState(Enums.ButtonEnum.Button5))
-				{
-					buttonPressed = true;
-				}
+                if (hwManager.GetButtonState(Enums.ButtonEnum.Button5))
+                {
+                    buttonPressed = true;
+                }
             }
         }
 
@@ -80,24 +145,54 @@ namespace VREscape
             {
                 yield return new WaitForSecondsRealtime(0);
             }
-            
+
             Debug.Log("RiddleFlashlight solved");
             FinishLevel();
         }
 
-        private void FinishLevel() 
+        private IEnumerator PlayAudioHints()
+        {
+            wordBundleEnumerator = wordBundles.GetEnumerator();
+            while (RiddleAudioSource.isPlaying)
+            {
+                yield return new WaitForSecondsRealtime(0);
+            }
+            if (!wordBundleEnumerator.MoveNext())
+            {
+                wordBundleEnumerator = wordBundles.GetEnumerator(); // Start from the beginning at end of loop
+            }
+            RiddleAudioSource.PlayOneShot(
+                isDiscoverd(wordBundleEnumerator.Current.Parent) 
+                ? wordBundleEnumerator.Current.ForwardClip 
+                : wordBundleEnumerator.Current.BackwardClip);
+            yield return new WaitForSecondsRealtime(0);
+        }
+
+        private void FinishLevel()
         {
             foreach (var lightSource in FindObjectOfType<Room>().GetComponentsInChildren<Light>())
             {
                 lightSource.enabled = true;
             }
-			
-			GameObject.FindWithTag("hinttext")?.SetActive(false);
-			
+
+            GameObject.FindWithTag("hinttext")?.SetActive(false);
+
             drawer.Close();
-			FlashLight.gameObject.SetActive(false);
+            FlashLight.gameObject.SetActive(false);
             OnRiddleDone?.Invoke(true);
             active = false;
+        }
+
+        private bool isDiscoverd(GameObject go)
+        {
+            return go.GetComponentsInChildren<MeshRenderer>().Where(m => !m.isVisible).Any();
+        }
+
+        private class WordBundle
+        {
+            public GameObject Parent;
+            public AudioClip ForwardClip;
+            public AudioClip BackwardClip;
         }
     }
 }

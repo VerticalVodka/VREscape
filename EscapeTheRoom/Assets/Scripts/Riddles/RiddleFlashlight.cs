@@ -31,8 +31,6 @@ namespace VREscape
         public AudioClip CameAudioBW;
         public AudioClip FromAudioBW;
 
-        public AudioSource RiddleAudioSource;
-
         private List<WordBundle> wordBundles;
         private IEnumerator<WordBundle> wordBundleEnumerator;
 
@@ -152,20 +150,24 @@ namespace VREscape
 
         private IEnumerator PlayAudioHints()
         {
+            Debug.Log("Start Audio Coroutine");
             wordBundleEnumerator = wordBundles.GetEnumerator();
-            while (RiddleAudioSource.isPlaying)
+            wordBundleEnumerator.MoveNext();
+            while (active)
             {
-                yield return new WaitForSecondsRealtime(0);
+                foreach (var bundle in wordBundles)
+                {
+                    bundle.AudioSource.PlayOneShot(
+                        isDiscoverd(bundle.Parent)
+                        ? bundle.ForwardClip
+                        : bundle.BackwardClip);
+                    yield return new WaitForSecondsRealtime(0);
+                    while (bundle.AudioSource.isPlaying)
+                    {
+                        yield return new WaitForSecondsRealtime(0);
+                    }
+                }
             }
-            if (!wordBundleEnumerator.MoveNext())
-            {
-                wordBundleEnumerator = wordBundles.GetEnumerator(); // Start from the beginning at end of loop
-            }
-            RiddleAudioSource.PlayOneShot(
-                isDiscoverd(wordBundleEnumerator.Current.Parent) 
-                ? wordBundleEnumerator.Current.ForwardClip 
-                : wordBundleEnumerator.Current.BackwardClip);
-            yield return new WaitForSecondsRealtime(0);
         }
 
         private void FinishLevel()
@@ -185,7 +187,7 @@ namespace VREscape
 
         private bool isDiscoverd(GameObject go)
         {
-            return go.GetComponentsInChildren<MeshRenderer>().Where(m => !m.isVisible).Any();
+            return go.GetComponentsInChildren<MeshRenderer>().All(m => m.isVisible);
         }
 
         private class WordBundle
@@ -193,6 +195,11 @@ namespace VREscape
             public GameObject Parent;
             public AudioClip ForwardClip;
             public AudioClip BackwardClip;
+            public AudioSource AudioSource {
+                get {
+                    return Parent.GetComponentInChildren<AudioSource>();
+                }
+            }
         }
     }
 }

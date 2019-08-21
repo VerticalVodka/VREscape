@@ -30,6 +30,11 @@ namespace VREscape
             CurrentState = StartValue;
         }
 
+        public virtual void Reset()
+        {
+            CurrentState = StartValue;
+        }
+
         protected virtual void RotaryTurned()
         {
             _audioSource?.PlayOneShot(RotaryTurnSound);

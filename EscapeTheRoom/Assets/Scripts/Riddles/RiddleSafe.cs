@@ -20,6 +20,7 @@ namespace VREscape
         public Boolean AutoStartRiddle = false;
         public Boolean isDebug = false;
         public List<GameObject> Planes;
+        public WebcamFeed WebcamFeed;
 
         private HWManager hwManager;
         private AudioSource _audioSource;
@@ -200,6 +201,7 @@ namespace VREscape
         private void FinishLevel()
         {
             isActive = false;
+            WebcamFeed.Play();
             hwManager.SendValue(Enums.UnlockEnum.Safe);
             OnRiddleDone?.Invoke(true);
         }

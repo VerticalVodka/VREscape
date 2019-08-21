@@ -1,4 +1,5 @@
 ﻿using System;
+using System.Collections;
 using System.Collections.Generic;
 using System.Linq;
 using System.Text;
@@ -61,6 +62,8 @@ namespace VREscape
         private HWManager hwManager;
 
         private bool gameRunning = false;
+        // e.g. when correct/wrong sounds and not wanting to accept input
+        private bool gamePaused = false;
         private bool isPlayingSounds = false;
         private int successesInSequence = 0;
         private int successesTotal = 0;
@@ -119,6 +122,7 @@ namespace VREscape
         private void StartPlayingSequenceSound()
         {
             sequenceAudioIndex = -1;
+            isAudioReady = true;
             shouldAudioPlay = true;
         }
 
@@ -139,6 +143,7 @@ namespace VREscape
         public void StartRiddle()
         {
             gameRunning = true;
+            gamePaused = false;
             lastCorrectButton = null;
             LoadNewLevel();
         }
@@ -153,6 +158,7 @@ namespace VREscape
         private void LoadNewLevel()
         {
             Debug.Log("Loading new Level");
+            gamePaused = false;
             StartPlayingSequenceSound();
             RandomizeButtons();
             RandomizeSequence();
@@ -228,36 +234,52 @@ namespace VREscape
 
         public void Update()
         {
-            if (!gameRunning)
+            if (!gameRunning || gamePaused)
+            {
+                if (gamePaused)
+                    Debug.Log("paused");
                 return;
+            }
             if (shouldAudioPlay && isAudioReady)
             {
                 var clip = buttonAnimalMap[correctButton].GetComponent<AudioSource>().clip;
                 animalAudioSource.PlayOneShot(clip);
 
                 isAudioReady = false;
-                int waitTime = audioWaitBetweenSequences + (int)(clip.length * 1000);
-                Task waitForClipFinished = new Task(async () =>
-                {
-                    await Task.Delay(waitTime);
-                    isAudioReady = true;
-                });
-                waitForClipFinished.Start();
+                float waitTime = (float)(audioWaitBetweenSequences) / 1000 + clip.length;
+                PauseAnimalSequenceFor(waitTime);
             }
 
             if (AnyWrongButtonGotPressed())
             {
-                PlayWrongButtonSound();
-                ResetLevel();
+                gamePaused = true;
+                PlayWrongButtonSound(ResetLevel);
                 return;
             }
 
             if (CorrectButtonGotPressed())
             {
-                PlayCorrectButtonSound();
-                WinLevel();
+                gamePaused = true;
+                PlayCorrectButtonSound(WinLevel);
                 return;
             }
+        }
+
+        private uint pauseCounter = 0;
+
+        private IEnumerator UnpauseAfterSeconds(float seconds, uint pauseId, Action callback = null)
+        {
+            yield return new WaitForSecondsRealtime(seconds);
+            if (pauseId == pauseCounter)
+                isAudioReady = true;
+            callback?.Invoke();
+        }
+
+        private void PauseAnimalSequenceFor(float waitTimeInS, Action callback = null)
+        {
+            uint pauseId = ++pauseCounter;
+            isAudioReady = false;
+            StartCoroutine(UnpauseAfterSeconds(waitTimeInS, pauseId, callback));
         }
 
         private bool AnyWrongButtonGotPressed()
@@ -286,14 +308,18 @@ namespace VREscape
             return false;
         }
 
-        private void PlayWrongButtonSound()
+        private void PlayWrongButtonSound(Action callback)
         {
             FeedbackAudioSource.PlayOneShot(WrongButtonAudioClip);
+            animalAudioSource.Stop();
+            PauseAnimalSequenceFor(WrongButtonAudioClip.length, callback);
         }
 
-        private void PlayCorrectButtonSound()
+        private void PlayCorrectButtonSound(Action callback)
         {
             FeedbackAudioSource.PlayOneShot(CorrectButtonAudioClip);
+            animalAudioSource.Stop();
+            PauseAnimalSequenceFor(CorrectButtonAudioClip.length, callback);
         }
     }
 }

@@ -57,12 +57,18 @@ namespace VREscape
             radioRotary = FindObjectOfType<RadioRotary>();
             buttonAudioSource = GetComponent<AudioSource>();
             instructionSource = GetComponent<AudioSource>();
+            ResetFrequency();
             radioRotary.IsRadioOn = true;
             radioRotary.Frequencies.Add(927, Instruction927Start);
 			radioRotary.Frequencies.Add(1000,RiddleInstruction);
             instructionSource.Play();
 			ElevatorMusicSource.Stop();
             StartCoroutine(Do());
+        }
+
+        private void ResetFrequency()
+        {
+            radioRotary.Reset();
         }
 
         public void SkipRiddle()

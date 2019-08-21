@@ -213,7 +213,7 @@ namespace VREscape
             hwManager.SendValue(Enums.UnlockEnum.Safe);
 
             SafeAudioSource.PlayOneShot(OpenDrawerSound);
-            Safe.Move(new Vector3(), OpenDrawerSound.length);
+            Safe.Move(Safe.transform.position - new Vector3(0, 0,0.28f), OpenDrawerSound.length);
 
             yield return new WaitForSecondsRealtime(OpenDrawerSound.length);
             OnRiddleDone?.Invoke(true);

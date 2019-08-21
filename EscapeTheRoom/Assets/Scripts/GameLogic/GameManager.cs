@@ -36,7 +36,7 @@ namespace VREscape
             }
             else
             {
-                SceneManager.LoadScene("OutroScene");
+                //SceneManager.LoadScene("OutroScene");
             }
         }
 

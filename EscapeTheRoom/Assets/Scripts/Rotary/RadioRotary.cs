@@ -39,6 +39,11 @@ namespace VREscape
                     BackGroundAudioSource.Play();
             }
 
+            UpdateNoiseAndMessageVolumes();
+        }
+
+        private void UpdateNoiseAndMessageVolumes()
+        {
             int roundedState = RoundedFrequenceyIfNeeded();
             for (var i = -30; i <= 30; ++i)
             {
@@ -54,8 +59,10 @@ namespace VREscape
                     }
 
                     _channelIsPlaying = ChannelAudioSource.isPlaying;
+                    return;
                 }
             }
+            ChannelAudioSource.Stop();
         }
 
         private int RoundedFrequenceyIfNeeded()

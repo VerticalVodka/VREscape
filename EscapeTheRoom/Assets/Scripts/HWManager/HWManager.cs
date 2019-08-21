@@ -17,16 +17,16 @@ namespace VREscape
         public string COMPort = "COM9";
         private InputQueue _inputQueue;
 
-        public int UpdatesPerSecond = 5;
+        public int UpdatesPerSecond = 10;
 
         private float deltaTime;
-        private float interpolatedTime = 0.0f;
+        private float interpolatedTime = 0.1f;
 
 
         public void Awake()
         {
             Application.targetFrameRate = 100;
-            deltaTime = 1.0f / (float)UpdatesPerSecond;
+            interpolatedTime = 1.0f / (float)UpdatesPerSecond;
             _inputQueue = new InputQueue(COMPort);
 
             _buttons = new Dictionary<Enums.ButtonEnum, bool>

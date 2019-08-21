@@ -48,8 +48,8 @@ namespace VREscape
 
                 for(int i = 0; i < Combination.Count; ++i)
                 {
-                    int rotation = Combination[i].Item2 == Directions.ClockWise ? 1 : -1;
-                    Planes[i].transform.rotation = Planes[i].transform.rotation * Quaternion.Euler(0, 1, 0);
+                    int rotation = Combination[i].Item2 == Directions.ClockWise ? -1 : 1;
+                    Planes[i].transform.rotation = Planes[i].transform.rotation * Quaternion.Euler(0, rotation, 0);
                 }
             }
         }

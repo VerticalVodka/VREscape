@@ -17,7 +17,7 @@ namespace VREscape
         public string COMPort = "COM9";
         private InputQueue _inputQueue;
 
-        public int UpdatesPerSecond = 10;
+        public int UpdatesPerSecond = 5;
 
         private float deltaTime;
         private float interpolatedTime = 0.0f;

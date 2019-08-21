@@ -9,21 +9,20 @@ namespace VREscape
 		public GameObject RoomBox;
 		public GameObject[] Walls;
 		public event Action<bool> OnRiddleDone;
+		public float FallDuration = 5.0f;
 		
 		private bool isRotating = false;
+		private Vector3[] positions = new Vector3[4];
 
 		// Use this for initialization
 		void Start () {
-            StartRiddle();
+			for(int i = 0; i<4; ++i){
+				positions[i] = new Vector3(Walls[i].transform.position.x, Walls[i].transform.position.y - Walls[i].transform.lossyScale.y / 2, Walls[i].transform.position.z);
+			}
 		}
 	
 		// Update is called once per frame
 		void Update () {
-			while(isRotating){
-				foreach(var wall in Walls){
-					wall.transform.RotateAround(new Vector3(wall.transform.position.x, 0, wall.transform.position.z), Vector3.right, Time.deltaTime * 10);
-				}
-			}
 		}
 		
         public void StartRiddle()
@@ -32,6 +31,7 @@ namespace VREscape
 			foreach(var wall in Walls){
 				wall.SetActive(true);
 			}
+			
 			StartCoroutine(DestroyRoom());
         }
 
@@ -43,7 +43,12 @@ namespace VREscape
 		
 		IEnumerator DestroyRoom(){
 			isRotating = true;
-			yield return new WaitForSeconds(15);
+			for(float j = 0.0f; j<180; ++j){
+				for(int i = 0; i<4; ++i){
+					Walls[i].transform.RotateAround(positions[i], Walls[i].transform.right, j/180);
+				}
+				yield return new WaitForSeconds(FallDuration/180);
+			}
 			FinishLevel();
 		}
 		

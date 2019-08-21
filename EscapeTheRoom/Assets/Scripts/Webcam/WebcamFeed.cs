@@ -11,10 +11,11 @@ public class WebcamFeed : MonoBehaviour
         webcamtex = new WebCamTexture(WebCamName);
         Renderer renderer = GetComponent<Renderer>();
         renderer.material.mainTexture = webcamtex;
+		webcamtex.Play();
     }
 
     public void Play()
     {
-        webcamtex.Play();
+		
     }
 }

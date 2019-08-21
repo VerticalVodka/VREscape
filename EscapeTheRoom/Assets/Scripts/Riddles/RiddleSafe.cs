@@ -10,10 +10,12 @@ namespace VREscape
         public enum Directions { ClockWise, CounterClockWise };
         public event Action<bool> OnRiddleDone;
         public GameObject InitiallyHiddenStuff;
-		public GameObject SafeModel;
+        public SmoothMovement Safe;
+        public AudioSource SafeAudioSource;
         public SafeRotary SafeRotary;
         public AudioClip CombinationDigitMatchesSound;
         public AudioClip FailSound;
+        public AudioClip OpenDrawerSound;
         public List<Tuple<int, Directions>> Combination = new List<Tuple<int, Directions>>();
         private int _combinationLength;
         public GameObject TurnClockWisePlane;
@@ -202,9 +204,18 @@ namespace VREscape
         private void FinishLevel()
         {
             isActive = false;
-			SafeModel.transform.position -= new Vector3(0,0,0.28f);
-            WebcamFeed.Play();
+            StartCoroutine(FinishCoroutine());
+        }
+
+        private IEnumerator FinishCoroutine()
+        {
+            //WebcamFeed.Play();
             hwManager.SendValue(Enums.UnlockEnum.Safe);
+
+            SafeAudioSource.PlayOneShot(OpenDrawerSound);
+            Safe.Move(new Vector3(), OpenDrawerSound.length);
+
+            yield return new WaitForSecondsRealtime(OpenDrawerSound.length);
             OnRiddleDone?.Invoke(true);
         }
     }

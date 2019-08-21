@@ -150,22 +150,16 @@ namespace VREscape
 
         private IEnumerator PlayAudioHints()
         {
-            Debug.Log("Start Audio Coroutine");
-            wordBundleEnumerator = wordBundles.GetEnumerator();
-            wordBundleEnumerator.MoveNext();
             while (active)
             {
                 foreach (var bundle in wordBundles)
                 {
-                    bundle.AudioSource.PlayOneShot(
-                        isDiscoverd(bundle.Parent)
+                    var clip = isDiscoverd(bundle.Parent)
                         ? bundle.ForwardClip
-                        : bundle.BackwardClip);
-                    yield return new WaitForSecondsRealtime(0);
-                    while (bundle.AudioSource.isPlaying)
-                    {
-                        yield return new WaitForSecondsRealtime(0);
-                    }
+                        : bundle.BackwardClip;
+
+                    bundle.AudioSource.PlayOneShot(clip);
+                    yield return new WaitForSecondsRealtime(clip.length);
                 }
             }
         }

@@ -19,7 +19,7 @@ namespace VREscape
 
         public RadioRotary()
         {
-            changeMultiplier = -18;
+            changeMultiplier = -9; //-18;
         }
 
         public override void Update()

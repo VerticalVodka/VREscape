@@ -209,7 +209,7 @@ namespace VREscape
 
         private IEnumerator FinishCoroutine()
         {
-            //WebcamFeed.Play();
+            WebcamFeed.Play();
             hwManager.SendValue(Enums.UnlockEnum.Safe);
 
             SafeAudioSource.PlayOneShot(OpenDrawerSound);

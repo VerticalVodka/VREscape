@@ -235,11 +235,7 @@ namespace VREscape
         public void Update()
         {
             if (!gameRunning || gamePaused)
-            {
-                if (gamePaused)
-                    Debug.Log("paused");
                 return;
-            }
             if (shouldAudioPlay && isAudioReady)
             {
                 var clip = buttonAnimalMap[correctButton].GetComponent<AudioSource>().clip;

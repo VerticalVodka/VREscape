@@ -10,6 +10,7 @@ namespace VREscape
         public enum Directions { ClockWise, CounterClockWise };
         public event Action<bool> OnRiddleDone;
         public GameObject InitiallyHiddenStuff;
+		public GameObject SafeModel;
         public SafeRotary SafeRotary;
         public AudioClip CombinationDigitMatchesSound;
         public AudioClip FailSound;
@@ -200,6 +201,7 @@ namespace VREscape
         private void FinishLevel()
         {
             isActive = false;
+			SafeModel.transform.position -= new Vector3(0,0,0.28f);
             hwManager.SendValue(Enums.UnlockEnum.Safe);
             OnRiddleDone?.Invoke(true);
         }

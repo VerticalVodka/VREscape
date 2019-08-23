@@ -75,14 +75,22 @@ namespace VREscape
             if (deltaTime >= interpolatedTime)
             {
                 deltaTime = 0.0f;
-                UpdateInputs();
+                UpdateButtons();
             }
+            UpdateRotaries();
             UpdateKeyboardInputs();
         }
 
-        private void UpdateInputs()
+        private void UpdateButtons()
         {
-            _inputQueue.ProcessData(out _buttons, out _rotaries);
+            var emptyRotary = new Dictionary<Enums.RotaryEnum, int>();
+            _inputQueue.ProcessData(out _buttons, out emptyRotary);
+        }
+
+        private void UpdateRotaries()
+        {
+            var emptyButtons = new Dictionary<Enums.ButtonEnum, bool>();
+            _inputQueue.ProcessData(out emptyButtons, out _rotaries);
         }
 
         private void UpdateKeyboardInputs()

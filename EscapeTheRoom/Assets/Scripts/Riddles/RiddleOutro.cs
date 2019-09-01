@@ -10,6 +10,9 @@ namespace VREscape
 		public GameObject[] Walls;
 		public event Action<bool> OnRiddleDone;
 		public float FallDuration = 5.0f;
+
+        public AudioSource OutroAudioSource;
+        public AudioClip OutroAudioClip;
 		
 		private bool isRotating = false;
 		private Vector3[] positions = new Vector3[4];
@@ -31,7 +34,12 @@ namespace VREscape
 			foreach(var wall in Walls){
 				wall.SetActive(true);
 			}
-			
+
+            if (OutroAudioClip != null)
+            {
+                OutroAudioSource?.PlayOneShot(OutroAudioClip);
+            }
+            
 			StartCoroutine(DestroyRoom());
         }
 

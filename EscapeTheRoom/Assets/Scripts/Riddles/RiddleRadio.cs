@@ -80,8 +80,11 @@ namespace VREscape
         public void Update()
         {
             if (!isActive || radioRotary.Frequencies.Count <= 1 || wantedSequence == null || currentButtonIdx >= wantedSequence.Length)
+            { 
+                CheckForRiddleSolved();
                 return;
-
+            }
+            
             var pressedButton = GetPressedButton();
             if (pressedButton == null) return;
 
@@ -89,7 +92,6 @@ namespace VREscape
             {
                 ++currentButtonIdx;
                 buttonAudioSource.PlayOneShot(CorrectButton);
-                CheckForRiddleSolved();
             } else
             {
                 currentButtonIdx = 0;
@@ -160,7 +162,7 @@ namespace VREscape
 
         private void CheckForRiddleSolved()
         {
-            if (currentButtonIdx > wantedSequence.Length)
+            if (currentButtonIdx >= wantedSequence?.Length)
             {
                 if (wantedSequence == FirstCorrectButtonOrder)
                 {

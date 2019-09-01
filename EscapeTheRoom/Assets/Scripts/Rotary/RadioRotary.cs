@@ -91,7 +91,6 @@ namespace VREscape
         {
             if (currentlyVisibleFrequency != CurrentState)
             {
-                Debug.Log($"{currentlyVisibleFrequency} != {CurrentState}");
                 currentlyVisibleFrequency += currentlyVisibleFrequency > CurrentState ? -1 : 1;
                 CurrentFrequencyTextMesh.SetText($"{(currentlyVisibleFrequency / 10d):0.0}");
             }

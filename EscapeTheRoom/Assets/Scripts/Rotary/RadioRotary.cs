@@ -2,6 +2,7 @@
 using UnityEngine;
 using TMPro;
 using System;
+using System.Collections;
 
 namespace VREscape
 {
@@ -15,11 +16,20 @@ namespace VREscape
 
         public int[] RoundToNumbers = new int[] { 800, 927, 1000, 1104 };
 
-        public TextMeshPro CurrentFrequency;
+        public TextMeshPro CurrentFrequencyTextMesh;
+
+        private int currentlyVisibleFrequency;
 
         public RadioRotary()
         {
-            changeMultiplier = -9; //-18;
+            changeMultiplier = -18;
+        }
+
+        public override void Reset()
+        {
+            base.Reset();
+            currentlyVisibleFrequency = CurrentState;
+            CurrentFrequencyTextMesh.SetText($"{(CurrentState / 10d):0.0}");
         }
 
         public override void Update()
@@ -27,14 +37,14 @@ namespace VREscape
             base.Update();
             if (!IsRadioOn)
             {
-                CurrentFrequency.SetText("");
+                CurrentFrequencyTextMesh.SetText("");
                 BackGroundAudioSource.Stop();
                 ChannelAudioSource.Stop();
             }
             else
             {
                 int roundedFreq = RoundedFrequenceyIfNeeded();
-                CurrentFrequency.SetText($"{(roundedFreq / 10d):0.0}");
+                ShowLerpedFrequencyText();
                 if (!BackGroundAudioSource.isPlaying)
                     BackGroundAudioSource.Play();
             }
@@ -75,6 +85,16 @@ namespace VREscape
                 }
             }
             return CurrentState;
+        }
+
+        private void ShowLerpedFrequencyText()
+        {
+            if (currentlyVisibleFrequency != CurrentState)
+            {
+                Debug.Log($"{currentlyVisibleFrequency} != {CurrentState}");
+                currentlyVisibleFrequency += currentlyVisibleFrequency > CurrentState ? -1 : 1;
+                CurrentFrequencyTextMesh.SetText($"{(currentlyVisibleFrequency / 10d):0.0}");
+            }
         }
     }
 }

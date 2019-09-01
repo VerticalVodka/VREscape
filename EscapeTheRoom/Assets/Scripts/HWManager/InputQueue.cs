@@ -13,10 +13,15 @@ namespace SerialTest
         private readonly SerialPort _serialPort;
         private readonly ConcurrentQueue<int> _inputs;
 
+        private Dictionary<Enums.ButtonEnum, bool> _lastButtonStates = new Dictionary<Enums.ButtonEnum, bool>();
+        private Dictionary<Enums.RotaryEnum, int>  _lastRotaryStates = new Dictionary<Enums.RotaryEnum, int>();
+
         private bool _suspended;
 
         public InputQueue(string serialInterface)
         {
+            InitButtons(_lastButtonStates);
+            InitRotary(_lastRotaryStates);
             try
             {
                 _inputs = new ConcurrentQueue<int>();
@@ -90,13 +95,16 @@ namespace SerialTest
         }
 
         //Called once every Tick
-        public void ProcessData(out Dictionary<Enums.ButtonEnum, bool> buttons,
+        public virtual void ProcessData(out Dictionary<Enums.ButtonEnum, bool> buttons,
             out Dictionary<Enums.RotaryEnum, int> rotary)
         {
+       
             buttons = new Dictionary<Enums.ButtonEnum, bool>();
             rotary = new Dictionary<Enums.RotaryEnum, int>();
+
             InitButtons(buttons);
             InitRotary(rotary);
+            
 
 
             int currentMessageCount = _inputs.Count;
@@ -104,8 +112,16 @@ namespace SerialTest
             for (int i = 0; i < currentMessageCount; i++)
             {
                 int data;
-                _inputs.TryDequeue(out data);
-                ProcessValue(data, buttons, rotary);
+                if(_inputs.TryDequeue(out data))
+                {
+                    ProcessValue(data, buttons, rotary);
+                    _lastButtonStates = buttons;
+                    _lastRotaryStates = rotary;
+                } else
+                {
+                    buttons = _lastButtonStates;
+                    rotary = _lastRotaryStates;
+                }
             }
         }
 

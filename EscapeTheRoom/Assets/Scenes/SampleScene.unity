@@ -16308,7 +16308,7 @@ MonoBehaviour:
   - {fileID: 822288588}
   FallDuration: 5
   OutroAudioSource: {fileID: 0}
-  OutroAudioClip: {fileID: 0}
+  OutroAudioClip: {fileID: 8300000, guid: 1ad6df0dbc5527d498d9f0830dacc536, type: 3}
 --- !u!4 &1798442208
 Transform:
   m_ObjectHideFlags: 0

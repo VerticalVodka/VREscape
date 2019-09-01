@@ -209,6 +209,7 @@ namespace VREscape
 
         private IEnumerator FinishCoroutine()
         {
+            InitiallyHiddenStuff.SetActive(false);
             WebcamFeed.Play();
             hwManager.SendValue(Enums.UnlockEnum.Safe);
 

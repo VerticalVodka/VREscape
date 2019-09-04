@@ -73,6 +73,10 @@ namespace VREscape
                     material = TurnCounterClockWisePlane.GetComponent<MeshRenderer>().sharedMaterial;
                 Planes[i].GetComponent<MeshRenderer>().material = material;
             }
+            if (Combination.TrueForAll(c => c.Item2 == Directions.ClockWise) && _combinationLength >= 3)
+                Combination[2] = new Tuple<int, Directions>(Combination[2].Item1, Directions.CounterClockWise);
+            else if (Combination.TrueForAll(c => c.Item2 == Directions.CounterClockWise) && _combinationLength >= 3)
+                Combination[2] = new Tuple<int, Directions>(Combination[2].Item1, Directions.ClockWise);
             if (isDebug)
             {
                 String comb = "Combination\n";

@@ -48,7 +48,7 @@ namespace VREscape
             if (isActive)
             {
 
-                for(int i = 0; i < Combination.Count; ++i)
+                for (int i = 0; i < Combination.Count; ++i)
                 {
                     int rotation = Combination[i].Item2 == Directions.ClockWise ? -1 : 1;
                     Planes[i].transform.rotation = Planes[i].transform.rotation * Quaternion.Euler(0, rotation, 0);
@@ -182,8 +182,11 @@ namespace VREscape
                             Debug.Log($"Next Target: {Combination[_combinationProgress + 1]}");
                     }
                     _combinationProgress++;
-                    UpdateDirectionPlanes();
-                    UpdateCombinationProgress();
+                    StartCoroutine(DoWithDelay(2, () =>
+                    {
+                        UpdateDirectionPlanes();
+                        UpdateCombinationProgress();
+                    }));
                     yield return new WaitForSecondsRealtime(0);
                 }
             }
@@ -214,10 +217,19 @@ namespace VREscape
             hwManager.SendValue(Enums.UnlockEnum.Safe);
 
             SafeAudioSource.PlayOneShot(OpenDrawerSound);
-            Safe.Move(Safe.transform.position - new Vector3(0, 0,0.28f), OpenDrawerSound.length);
+            Safe.Move(Safe.transform.position - new Vector3(0, 0, 0.28f), OpenDrawerSound.length);
 
             yield return new WaitForSecondsRealtime(OpenDrawerSound.length);
             OnRiddleDone?.Invoke(true);
+        }
+
+        private IEnumerator DoWithDelay(float seconds, Action action)
+        {
+            Debug.Log("start delay ");
+            yield return new WaitForSecondsRealtime(seconds);
+            Debug.Log("end delay");
+            action.Invoke();
+            yield return new WaitForSecondsRealtime(0);
         }
     }
 }
